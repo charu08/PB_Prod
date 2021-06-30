@@ -1,0 +1,521 @@
+<apex:component controller="CompanySummaryController">
+     
+    <apex:attribute name="selectedYear" description="This is the value for the component." type="String"/>
+    <style type="text/css">
+      #CR13-Table thead th:last-child,
+      #CR7-Table thead th:last-child{
+        white-space: normal;
+      }
+    </style>
+     <div class="slds-grid slds-wrap">
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading_small slds-truncate"><center><strong>All Contracts - Grouped by Closing Status</strong></center></span></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <div class="slds-grid"> 
+                        <div class="slds-size_1-of-1">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body slds-p-horizontal_small">
+                                   <div class="tooltip"><h2><span class="slds-text-heading_small slds-truncate"><strong><a href="{!commission}" target="_blank"><font color="black">Commissions</font></a></strong></span></h2>
+                                <span class="tooltiptext">Click to view full report</span></div>
+                                </div>
+                            </header>
+                             <div class="slds-m-top_small" id="CR-table13_div" style="max-height: 400px">
+                            </div>
+                            Status not equal to Bust Out
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-m-top_x-large">
+                        <div class="slds-size_1-of-1">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body slds-p-horizontal_small">
+                                  <div class="tooltip"><h2><span class="slds-text-heading_small slds-truncate"><strong><a href="{!referral_fee}" target="_blank"><font color="black">Referral Fee</font></a></strong></span></h2>
+                                    <span class="tooltiptext">Click to view full report</span></div> 
+                                </div>
+                            </header>
+                            <div class="slds-m-top_small" id = "CR-table7_div" style="max-height: 545px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                           <div class="tooltip"><h2><span class="slds-text-heading_small slds-truncate "><strong><a href="{!admin_fee}" target="_blank"><font color="black">Admin Fees YTD</font></a></strong></span></h2>
+                            <span class="tooltiptext">Click to view full report</span></div>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <div class="slds-grid">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-m-top_small" id = "CR-table9_div" style="max-height: 545px">
+    
+                            </div>
+                            AdminFee=True,Contract Date=YTD
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading_small slds-truncate"><strong><font color="black">Closed Deals By City</font></strong></span></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <div class="slds-grid">
+                        <div class="slds-size_1-of-1 chartSection">
+                            <div id ="chartdiv" style="width: 100%;height: 345px;">
+                               
+                            </div>
+                            <div class="chartNoData" style="display: none;">No Record Found</div>
+                        </div>
+                    </div>
+                    <div class="tooltip"><b><center><a href="{!closed_deals}" target="_blank"><font color="black">Sum of Net Transaction Commission</font></a></center></b>
+                    <span class="tooltiptext">Click to view full report</span></div>
+                </div>
+              </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+                <div class="slds-card slds-theme_shade">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__body">
+                                <h2><span class="slds-text-heading_small slds-truncate"><strong><font color="black">Attorney</font></strong></span></h2>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="slds-card__body">
+                        <div class="slds-grid">
+                            <div class="slds-size_1-of-1 chartSection">
+                              <div class="slds-m-top_small" id="attorney" style="height: 375px">
+                                  <span>
+                                      <div class="slds-m-top_small" id="CR-table14_div"/>
+                                      
+                                  </span>
+                              </div>
+                              <div class="attornNoData" style="display: none;">No Record Found</div>
+                            </div>
+                        </div>                    
+                    </div>
+                    <div class="tooltip"><b><center><a href="{!attorney}" target="_blank"><font color="black">Sum of Net Transaction Commission</font></a></center></b>
+                    <span class="tooltiptext">Click to view full report</span></div>
+                </div>
+            </div>
+            <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+                <div class="slds-card slds-theme_shade">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__body">
+                                <h2><span class="slds-text-heading_small slds-truncate"><strong><font color="black">Lender</font></strong></span></h2>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="slds-card__body">
+                        <div class="slds-grid">
+                            <div class="slds-size_1-of-1 chartSection">
+                                <div class="slds-m-top_small" id = "lender" style="height: 375px">
+                                    
+                                </div>
+                                <div class="lenderNoData" style="display: none;">No Record Found</div>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="tooltip"><b><center><a href="{!lender}" target="_blank"><font color="black">Sum of Net Transaction Commission</font></a></center></b>
+                    <span class="tooltiptext">Click to view full report</span></div>
+                </div>
+            </div>
+            <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+                <div class="slds-card slds-theme_shade">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__body">
+                                <h2><span class="slds-text-heading_small slds-truncate"><strong><font color="black">Home Warranty</font></strong></span></h2>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="slds-card__body">
+                        <div class="slds-grid">
+                            <div class="slds-size_1-of-1 chartSection">
+                                <div class="slds-m-top_small" id = "homewarranty" style="height: 375px">
+                                    <span>
+                                        <div class="slds-m-top_small" id="CR-table1_div"/>
+                                    </span>
+                                </div>
+                                <div class="homewarrantyNoData" style="display: none;">No Record Found</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="tooltip"><b><center><a href="{!home_warranty}" target="_blank"><font color="black">Sum of Net Transaction Commission</font></a></center></b>
+                    <span class="tooltiptext">Click to view full report</span></div>
+                </div>
+            </div>
+        </div>
+             <!-- //Clarify with client      <html><strong>Referral Fee</strong></html>
+                <div class="slds-m-top_small" id="CR-table7_div">
+                </div>
+           
+          <html><strong>Closed Contracts-2018 Inspector</strong></html>
+             <div class="slds-m-top_small" id = "CR-table11_div" style="max-height: 400px">
+         </div> -->
+          
+        <script> 
+        var map = new Object();
+                        map["1"] = "January";
+                        map["2"] = "February";
+                        map["3"] = "March";
+                        map["4"] = "April";
+                        map["5"] = "May";
+                        map["6"] = "June";
+                        map["7"] = "July";
+                        map["8"] = "August";
+                        map["9"] = "September";
+                        map["10"] = "October";
+                        map["11"] = "November";
+                        map["12"] = "December";
+           //Referral Fee
+           function func7(a){
+           console.log('===a1221==='+a);
+                CompanySummaryController.FetchData_7(a,function(Result , event){
+                   if(event.status){
+                      console.log('>>>Result>>CompanySummaryController', Result); 
+                      createClientReviews7(Result);                                               
+                   }
+                   else{
+                      console.log(event.message);
+                   }
+                    });
+           }
+           function createClientReviews7(data){
+              console.log('>>>>>>CompanySummaryController>>>>'+data);
+              var table7 = '';
+              var items = data.map(function(item){    
+              var metrics = {
+                  status :item.status || '',
+                  count1 : item.count1 || 0,
+                  comission : item.commission || 0.00,
+              }
+              return metrics;
+            })
+                totals=0;
+                sum=0;
+                table7 +=
+                '<table class="slds-table slds-table_bordered slds-table_fixed-layout" id="CR7-Table">'+
+                    '<thead>'+
+                      '<tr class="blue-bg">'+
+                        '<th>Closing Status</th>'+
+                        '<th>Record Count</th>'+
+                        '<th>Sum of Referral Amount</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody>';
+                    for(i=0;i<items.length;i++){
+                     table7+='   <tr>'+
+                            '<td>'+
+                            '   <span class="slds-truncate" title="'+items[i].status+'">'+
+                             '      '+items[i].status+' '+
+                            '   </span>'+
+                            '</td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].count1+'">'+items[i].count1+'</span></td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].comission+'">$'+numberWithCommas(Math.round(items[i].comission))+'</span></td>'+
+                       '</tr>';
+                       totals+=Number(items[i].count1);
+                       sum+=items[i].comission;
+                   }
+                   table7+='<tr class="RowTotal"><td>Total</td><td class="totals8"></td><td class="sum8"></td></tr>';
+                   table7 += ' </tbody></table>'; 
+                  console.log('aaaa', table7);
+                  totals=numberWithCommas(totals);
+                  sum=numberWithCommas(Math.round(sum));
+                  
+                 $("#CR-table7_div").html(table7);
+                  $(".totals8").html(totals);
+                   $(".sum8").html('$'+sum);                      
+           }              
+            //
+           function func8(a){
+                CompanySummaryController.FetchData_8(a,function(Result , event){
+                   if(event.status){
+                      console.log('>>>Result>>CompanySummaryController', Result); 
+                      createClientReviews8(Result);                                               
+                   }
+                   else{
+                      console.log(event.message);
+                   }
+                    });
+           }
+           function createClientReviews8(data){
+              console.log('>>>>>>CompanySummaryController>>>>'+data);
+              var table8 = '';
+              var items = data.map(function(item) {    
+              var metrics = {
+                  month :item.month || '',
+                  count1 : item.count1 || 0,
+                  comission : item.commission || 0.00,
+              }
+              return metrics;
+           })
+             
+                table8 +=
+                '<table class="slds-table slds-table_bordered" id="CR8-Table">'+
+                    '<thead>'+
+                      '<tr class="blue-bg">'+
+                      '<th>Contract Date</th>'+
+                      '<th>Record Count</th>'+
+                      '<th>Sum of Net Transaction Commission</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody>';
+                    for(i=0;i<items.length;i++){
+                     table8 +='   <tr>'+
+                            '<td>'+
+                            '   <span class="slds-truncate" title="'+items[i].month+'">'+
+                             '      '+map[items[i].month]+' '+
+                            '   </span>'+
+                            '</td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].count1+'">'+items[i].count1+'</span></td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].comission+'">$'+numberWithCommas(Math.round(items[i].comission))+'</span></td>'+
+                       '</tr>';
+                   }
+                   table8 += ' </tbody></table>'; 
+                 $("#CR-table8_div").html(table8);
+                                       
+           }
+           //Admin Fees
+           function func9(a){
+                CompanySummaryController.FetchData_9(a,function(Result , event){
+                   if(event.status){
+                      console.log('>>>Result>>CompanySummaryController', Result); 
+                      createClientReviews9(Result);                                               
+                   }
+                   else{
+                      console.log(event.message);
+                   }
+                    });
+           }
+           function createClientReviews9(data){
+              console.log('>>>>>>CompanySummaryController>>>>'+data);
+              var table9 = '';
+              var items = data.map(function(item) {    
+              var metrics = {
+                  month :item.month || '',
+                  count1 : item.count1 || 0,
+                  comission : item.commission || 0.00,
+              }
+              return metrics;
+           })
+             var totals=0;
+             sum=0;
+                table9 +=
+                '<table class="slds-table slds-table_bordered" id="CR9-Table">'+
+                    '<thead>'+
+                      '<tr class="blue-bg">'+
+                      '<th>Contract Date</th>'+
+                      '<th>Record Count</th>'+
+                      '<th>Sum of Net Transaction Commission</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody>';
+                    for(i=0;i<items.length;i++){
+                     table9 +='   <tr>'+
+                            '<td>'+
+                            '   <span class="slds-truncate" title="'+items[i].month+'">'+
+                             '      '+map[items[i].month]+' '+
+                            '   </span>'+
+                            '</td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].count1+'">'+items[i].count1+'</span></td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].comission+'">$'+numberWithCommas(Math.round(items[i].comission))+'</span></td>'+
+                       '</tr>';
+                       totals+=Number(items[i].count1);
+                       sum+=items[i].comission;
+                   }
+                   table9 += '<tr class="RowTotal"><td>Totals</td><td class="totals10"></td><td class="sum10"></td></tr>'; 
+                   table9 += ' </tbody></table>'; 
+                  totals=numberWithCommas(totals);
+                  sum=numberWithCommas(Math.round(sum));
+                  
+                 $("#CR-table9_div").html(table9 );
+                 $(".totals10").html(totals);
+                 $(".sum10").html('$'+sum);                   
+           }
+           
+           //Closed Contracts 2018-Inspector
+           function func11(a){
+                CompanySummaryController.FetchData_11(a,function(Result , event){
+                   if(event.status){
+                      console.log('>>>Result>>CompanySummaryController', Result); 
+                      createClientReviews11(Result);                                               
+                   }
+                   else{
+                      console.log(event.message);
+                   }
+                    });
+           }
+           function createClientReviews11(data){
+              console.log('>>>>>>CompanySummaryController>>>>'+data);
+              var table11 = '';
+              var items = data.map(function(item) {    
+              var metrics = {
+                  month :item.month || '',
+                  count1 : item.count1 || 0,
+                  comission : item.commission || 0.00,
+              }
+              return metrics;
+           })
+                var totals=0;
+                sum=0;
+                table11 +=
+                '<table class="slds-table slds-table_bordered" id="CR11-Table">'+
+                    '<thead>'+
+                      '<tr class="blue-bg">'+
+                      '<th>Contract Date</th>'+
+                      '<th>Record Count</th>'+
+                      '<th>Sum of Net Transaction Commission</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody>';
+                    for(i=0;i<items.length;i++){
+                     table11 +='   <tr>'+
+                            '<td>'+
+                            '   <span class="slds-truncate" title="'+items[i].month+'">'+
+                             '      '+map[items[i].month]+' '+
+                            '   </span>'+
+                            '</td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].count1+'">'+items[i].count1+'</span></td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].comission+'">$'+numberWithCommas(Math.round(items[i].comission))+'</span></td>'+
+                       '</tr>';
+                       totals+=Number(items[i].count1);
+                       sum+=items[i].comission;
+                   }
+                   table11 += '<tr class="RowTotal"><td>Totals</td><td class="totals12"></td><td class="sum12"></td></tr>'; 
+                   table11 += ' </tbody></table>'; 
+                  console.log('aaaa', table11);
+                  totals=numberWithCommas(totals);
+                  sum=numberWithCommas(Math.round(sum));
+                  
+                 $("#CR-table11_div").html(table11);
+                 $(".totals12").html(totals);
+                 $(".sum12").html('$'+sum);
+           }  
+           function func12(a){
+                CompanySummaryController.FetchData_2(a,function(Result , event){
+                   if(event.status){
+                      console.log('>>>Result>>CompanySummaryController', Result); 
+                      createClientReviews12(Result);                                               
+                   }
+                   else{
+                      console.log(event.message);
+                   }
+                    });
+           }
+           function createClientReviews12(data){
+              console.log('>>>>>>CompanySummaryController>>>>'+data);
+              var table12 = '';
+              var items = data.map(function(item) {    
+              var metrics = {
+                  status :item.status || '',
+                  count1 : item.count1 || 0,
+              }
+              return metrics;
+           })
+             
+                table12 +=
+                '<table class="slds-table slds-table_bordered" id="CR12-Table">'+
+                    '<thead>'+
+                      '<tr class="blue-bg">'+
+                      '<th>Contract Date</th>'+
+                      '<th>Record Count</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody>';
+                    for(i=0;i<items.length;i++){
+                     table12 +='<tr>'+
+                            '<td>'+
+                            '   <span class="slds-truncate" title="'+items[i].status+'">'+
+                             '      '+items[i].status+' '+
+                            '   </span>'+
+                            '</td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].count1+'">'+items[i].count1+'</span></td>'+
+                       '</tr>';
+                   }
+                   table12 += ' </tbody></table>'; 
+                  console.log('aaaa', table12);
+                 $("#CR-table12_div").html(table12); 
+                                       
+           }   
+           //Commissions
+           function func13(a){
+                CompanySummaryController.FetchData_13(a,function(Result , event){
+                   if(event.status){
+                      console.log('>>>Result>>CompanySummaryController', Result); 
+                      createClientReviews13(Result);                                               
+                   }
+                   else{
+                      console.log(event.message);
+                   }
+                    });
+           }
+           function createClientReviews13(data){
+              console.log('>>>>>>CompanySummaryController>>>>'+data);
+              var table13 = '';
+              var items = data.map(function(item) {    
+              var metrics = {
+                  status :item.status || '',
+                  count1 : item.count1 || 0,
+                  comission : item.commission || 0.00,
+              }
+              return metrics;
+           })
+                var totals=0;
+                var sum=0;
+                table13 +=
+                '<table class="slds-table slds-table_bordered" id="CR13-Table">'+
+                    '<thead>'+
+                      '<tr class="blue-bg">'+
+                      '<th>Closing Status</th>'+
+                      '<th>Record Count</th>'+
+                      '<th>Sum of Net Transaction Commission</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody>';
+                    for(i=0;i<items.length;i++){
+                     table13 +='<tr>'+
+                            '<td>'+
+                            '   <span class="slds-truncate" title="'+items[i].status+'">'+
+                             '      '+items[i].status+' '+
+                            '   </span>'+
+                            '</td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].count1+'">'+items[i].count1+'</span></td>'+
+                            '<td><span class="slds-truncate" title="'+items[i].comission+'">$'+numberWithCommas(Math.round(items[i].comission))+'</span></td>'+
+                       '</tr>';
+                       totals+=items[i].count1;
+                       sum+=items[i].comission;
+                   }
+                   table13 += '<tr class="RowTotal"><td>Totals</td><td class="totals14"></td><td class="sum14"></td></tr>'; 
+                   table13 += ' </tbody></table>'; 
+                  console.log('aaaa', table13);
+                  totals=numberWithCommas(totals);
+                  sum=numberWithCommas(Math.round(sum));
+                 $("#CR-table13_div").html(table13);  
+                 $('.totals14').html(totals);
+                 $('.sum14').html(sum);              
+           }
+           
+            </script>
+</apex:component>

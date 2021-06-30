@@ -1,0 +1,389 @@
+<apex:page readonly="true" controller="CompanySummaryController" docType="html-5.0">
+    <apex:slds />
+    <title>Company Summary Dashboard</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <apex:stylesheet value="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <apex:includeScript value="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js" />
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" />
+    <script src="/soap/ajax/28.0/connection.js" type="text/javascript"></script>
+    <apex:includeScript value="https://www.jqueryscript.net/demo/jQuery-Plugin-For-Fixed-Table-Header-Footer-Columns-TableHeadFixer/tableHeadFixer.js" />
+    <script src="/soap/ajax/28.0/connection.js" type="text/javascript"></script>
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/dark.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <style>
+        thead {
+            width: 60px;
+            max-width: 60px;
+            text-align: center;
+            white-space: normal;
+            vertical-align: top;
+        }
+
+        .slds-table tr th {
+            text-align: center;
+            white-space: inherit !important;
+        }
+
+        .slds-table tr td {
+            text-align: center;
+        }
+
+        table {
+            text-align: center;
+        }
+
+        .slds-truncate {
+            text-align: center;
+        }
+
+        .slds-scope .slds-card__header {
+            padding: .75rem .75rem 0;
+        }
+
+        .spinnerBg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 1;
+        }
+
+        .RowTotal {
+            font-weight: bold;
+            background-color: #dddbda;
+        }
+
+        .chartSection {
+            position: relative;
+        }
+
+        .homewarrantyNoData,
+        .chartNoData,
+        .lenderNoData,
+        .attornNoData {
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.3rem;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black;
+            /* If you want dots under the hoverable text */
+        }
+
+        /* Tooltip text */
+        .tooltip .tooltiptext {
+            top: 140%;
+            visibility: hidden;
+            width: 160px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+
+            /* Position the tooltip text */
+            position: absolute;
+            z-index: 1;
+            left: 50%;
+            margin-left: -60px;
+
+            /* Fade in tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* Tooltip arrow */
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: -33%;
+            z-index: 9;
+            left: 50%;
+            transform: rotate(180deg);
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    <c:spinner spinner_name="wave" spinner_color="blue" />
+    <apex:form id="myform">
+
+        <div class="slds-container slds-container_x-large slds-container_center">
+            <h1 class="slds-text-heading_large slds-text-align_center" style="font-weight:500">Company Summary
+                Dashboard</h1>
+            <div class="slds-scope">
+                <div class="slds-form-element slds-p-around_small" style="max-width: 300px; margin: 0 auto;">
+                    <div class="slds-form-element__control">
+                        <label class="slds-form-element__label">
+                            <font size="2">Year</font>
+                        </label>
+                        <div class="slds-select_container slds-m-bottom_large">
+                            <select class="slds-select " id="yearval" label="Year" value="{!selectedYear}" onchange="onselectfun(this.value);"
+                                size="1">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <apex:actionFunction name="onValueChange" action="{!getassignSelectedYear}" reRender="compPannel" oncomplete="callComponents();"
+                    >
+                    <apex:param name="val" value="" assignTo="{!selectedYear}" />
+                </apex:actionFunction>
+                <script>                    
+                    var d1 = new Date();
+                    var year = d1.getFullYear();
+                    function onselectfun(val) {
+                        km_spin(true);                        
+                        year = val;
+                        onValueChange(val);
+                        console.log('====val===' + val);
+                       
+                    }
+
+                    function callComponents() {
+                        func(year);
+                        func1(year);
+                        func2(year);
+                        func3(year);
+                        func4(year);
+                        func5(year);
+                        func7(year);
+                        //func8(year); 
+                        func9(year);
+                        //func10(year);
+                        func11(year);
+                        func12(year);
+                        func13(year);
+                        //func14(year);
+                        console.log('Methods Calling');
+                        setTimeout(function() {km_spin(false);}, 1200);
+                    }
+
+                    function hidespin() {
+                        km_spin(false);
+                    }
+                    $(function () {
+                        //get 3 years and append them in the year picklist
+                        var d = new Date();
+                        var yearOption = '';
+                        var num = d.getFullYear() - 2016;
+                        for(var i = 0; i <= num; i++) {
+                            yearOption += '<option value="' + (d.getFullYear() - i) + '">' + (d.getFullYear() -
+                                i) + '</option>';
+                        }
+                        $("#yearval").html(yearOption);
+                        callComponents();
+                        console.log('------------------' + d.getFullYear());
+                    });
+
+                    function numberWithCommas(x) {
+                        if (typeof x !== 'undefined') {
+                            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        }
+                    }
+                </script>
+                <apex:outputpanel id="compPannel">
+                    <c:CompanySummary selectedYear="{!selectedYear}" id="comp1" />
+                    <c:CompanySummary_Comp2 selectedYear="{!selectedYear}" id="comp2" />
+
+                    <apex:outputpanel >
+                        <script>
+                            am4core.useTheme(am4themes_animated);
+                            let data = []; 
+                            <apex:repeat value="{!OrderData}" var="reasons" >
+                                data.push({
+                                    "label": "{!reasons.name}",
+                                    "value": "{!reasons.data}"
+                                }); 
+                            </apex:repeat>
+
+                            var chart = am4core.createFromConfig({
+                                "data": data,
+                                "series": [{
+                                    "type": "PieSeries",
+                                    "dataFields": {"value": "value", "category": "label"},
+                                    "ticks": {"disabled": true},
+                                    "labels": {"disabled": true},
+                                    "slices": {
+                                        "tooltipText": "{category}: {value.percent.formatNumber('#.##')}% ($ {value.value})",
+                                        "events": {
+                                            "hit": function(ev) {
+                                                var series = ev.target.dataItem.component;
+                                                series.slices.each(function(item) {
+                                                    if (item.isActive && item != ev.target) {
+                                                        item.isActive = false;
+                                                    }   
+                                                })
+                                            }
+                                        }
+                                    }
+                                }],
+                                "innerRadius": "20%"
+                            }, "chartdiv", am4charts.PieChart);
+                            console.log('****CDeals***', data);
+                            // Add a legend
+
+                            if (data == '') {
+                                document.querySelector('.chartNoData').style.display = 'block';
+                            } else {
+                                document.querySelector('.chartNoData').style.display = 'none';
+                            }
+                        </script>
+                        <script>
+                            let data1 = []; 
+                            <apex:repeat value="{!FetchData_14}" var="reasons">
+                                data1.push({
+                                    "label": "{!reasons.name}",
+                                    "value": "{!reasons.data}"
+                                }); 
+                            </apex:repeat>
+                            var chart = am4core.createFromConfig({
+                                "data": data1,
+                                "series": [{
+                                    "type": "PieSeries",
+                                    "dataFields": {"value": "value", "category": "label"},
+                                    "ticks": {"disabled": true},
+                                    "labels": {"disabled": true},
+                                    "slices": {
+                                        "tooltipText": "{category}: {value.percent.formatNumber('#.##')}% ($ {value.value})",
+                                        "events": {
+                                            "hit": function(ev) {
+                                                var series = ev.target.dataItem.component;
+                                                series.slices.each(function(item) {
+                                                    if (item.isActive && item != ev.target) {
+                                                        item.isActive = false;
+                                                    }   
+                                                })
+                                            }
+                                        }
+                                    }
+                                }],
+                                "innerRadius": "20%"
+                            }, "attorney", am4charts.PieChart);
+
+                            
+                            console.log('**attorney*****', data1);
+                            // Add a legend
+
+                            //@chart.legend = new am4charts.Legend();
+                            //@chart.legend.position = "bottom";
+                          
+                            if (data1 == '') {
+                                document.querySelector('.attornNoData').style.display = 'block';
+                            } else {
+                                document.querySelector('.attornNoData').style.display = 'none';
+                            }
+                        </script>
+                        <script>
+                            let data2 = []; 
+                            <apex:repeat value="{!FetchData_8}" var="reasons">
+                                data2.push({
+                                    "label": "{!reasons.name}",
+                                    "value": "{!reasons.data}"
+                                });
+                            </apex:repeat>
+                            var chart = am4core.createFromConfig({
+                                "data": data2,
+                                "series": [{
+                                    "type": "PieSeries",
+                                    "dataFields": {"value": "value", "category": "label"},
+                                    "ticks": {"disabled": true},
+                                    "labels": {"disabled": true},
+                                    "slices": {
+                                        "tooltipText": "{category}: {value.percent.formatNumber('#.##')}% ($ {value.value})",
+                                        "events": {
+                                            "hit": function(ev) {
+                                                var series = ev.target.dataItem.component;
+                                                series.slices.each(function(item) {
+                                                    if (item.isActive && item != ev.target) {
+                                                        item.isActive = false;
+                                                    }   
+                                                })
+                                            }
+                                        }
+                                    }
+                                }],
+                                "innerRadius": "20%"
+                            }, "lender", am4charts.PieChart);
+                            console.log('**lender*****', data2);
+                            if (data2 == '') {
+                                document.querySelector('.lenderNoData').style.display = 'block';
+                            } else {
+                                document.querySelector('.lenderNoData').style.display = 'none';
+                            }
+                        </script>
+                        <script>
+
+                            let data3 = []; 
+                            <apex:repeat value="{!FetchData_10}" var="reasons" >
+                                data3.push({
+                                    "label": "{!reasons.name}",
+                                    "value": "{!reasons.data}"
+                                }); 
+                            </apex:repeat>
+                            var chart = am4core.createFromConfig({
+                                "data": data3,
+                                "series": [{
+                                    "type": "PieSeries",
+                                    "dataFields": {"value": "value", "category": "label"},
+                                    "ticks": {"disabled": true},
+                                    "labels": {"disabled": true},
+                                    "slices": {
+                                        "tooltipText": "{category}: {value.percent.formatNumber('#.##')}% ($ {value.value})",
+                                        "events": {
+                                            "hit": function(ev) {
+                                                var series = ev.target.dataItem.component;
+                                                series.slices.each(function(item) {
+                                                    if (item.isActive && item != ev.target) {
+                                                        item.isActive = false;
+                                                    }   
+                                                })
+                                            }
+                                        }
+                                    }
+                                }],
+                                "innerRadius": "20%"
+                            }, "homewarranty", am4charts.PieChart);
+                            console.log('**warranty*****', data3);
+                            if (data3 == '') {
+                                document.querySelector('.homewarrantyNoData').style.display = 'block';
+                            } else {
+                                document.querySelector('.homewarrantyNoData').style.display = 'none';
+                            }
+                        </script>
+                    </apex:outputpanel>
+
+                </apex:outputpanel>
+            </div>
+        </div>
+    </apex:form>
+
+</apex:page>

@@ -1,0 +1,634 @@
+<apex:component controller="CompanySummaryController">
+    <apex:attribute name="selectedYear" description="This is the value for the component." type="String" />
+    <style>
+        .slds-card__header {
+            padding: .75rem .75rem 0;
+        }
+
+        .slds-table thead .blue-bg th {
+            background: rgba(21, 137, 238, 0.8);
+            color: #fff;
+        }
+
+        .slds-card.slds-theme_shade:hover {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 0 25px 4px #525252;
+        }
+
+        #CR-table3_div,
+        #CR-table6_div,
+        #CR-table4_div {
+            /*height: 471px;*/
+            max-height: 545px
+        }
+
+        @media (max-width: 767px) {
+
+            #CR-table3_div,
+            #CR-table6_div,
+            #CR-table4_div {
+                height: auto;
+                max-height: 545px
+            }
+        }
+        
+    </style>
+    <apex:actionFunction name="link" action="getRefreshPage">
+        <apex:param value="" assignTo="{!reportid}" />
+    </apex:actionFunction>
+
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading_small slds-truncate"><b><font color="black">Contracts</font></b></span></h2>
+                            <div class="tooltip"><b><a href="{!contracts}" target="_blank">
+                                <font color="black">Grouped by Close Month - YTD</font></a></b>
+                                <span class="tooltiptext">Click to view full report</span>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body ">
+                    <div class="slds-grid">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-scrollable_y slds-m-top_small" id="CR-table1_div" style="max-height: 545px">
+                                Status/=Bust Out, Contract Date=YTD
+                            </div>
+                            Status/=Bust Out, Contract Date=YTD
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading_small slds-truncate"><b>
+                                        <font color="black">Closed Contracts - Commission</font>
+                                    </b></span></h2>
+                            <div class="tooltip"><b><a href="{!contracts_commission}"
+                                        target="_blank">
+                                        <font color="black">Grouped by Close Month - YTD</font>
+                                    </a></b>
+                                <span class="tooltiptext">Click to view full report</span></div>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <div class="slds-grid">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-scrollable_y slds-m-top_small" id="CR-table2_div" style="max-height: 545px">
+
+                            </div>
+                            Status=Closed, Close Date=YTD
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading_small slds-truncate"><b>
+                                        <font color="black">Closed Contracts - Sales Volume</font>
+                                    </b></span></h2>
+                            <div class="tooltip"><b><a href="{!sales_vol}"
+                                        target="_blank">
+                                        <font color="black">Grouped by Close Month - YTD</font>
+                                    </a></b>
+                                <span class="tooltiptext">Click to view full report</span></div>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <div class="slds-grid">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-scrollable_y slds-m-top_small" id="CR-table5_div" style="max-height: 545px">
+
+                            </div>
+                            Status = Closed, Close Date = YTD
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading_small slds-truncate"><b>
+                                        <font color="black">Pending Contracts</font>
+                                    </b></span></h2>
+                            <div class="tooltip"><b><a href="{!pending_contracts}"
+                                        target="_blank">
+                                        <font color="black">Grouped by Close Month - YTD</font>
+                                    </a></b>
+                                <span class="tooltiptext">Click to view full report</span></div>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <div class="slds-grid ">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-scrollable_y slds-m-top_small" id="CR-table4_div">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading_small slds-truncate"><b>
+                                        <font color="black">Closed Contracts (Buyer)</font>
+                                    </b></span></h2>
+                            <div class="tooltip"><b><a href="{!buyer_contracts}"
+                                        target="_blank">
+                                        <font color="black">Grouped by Close Month - YTD</font>
+                                    </a></b>
+                                <span class="tooltiptext">Click to view full report</span></div>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <div class="slds-grid">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-scrollable_y slds-m-top_small" id="CR-table3_div" style="word-wrap: break-word;">
+
+                            </div>
+                            Status = Closed, RecordType = Buyer, CloseDate = YTD
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-col_padded slds-m-bottom_large">
+            <div class="slds-card slds-theme_shade">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading_small slds-truncate"><b>
+                                        <font color="black">Closed Contracts (Seller)</font>
+                                    </b></span></h2>
+                            <div class="tooltip"><b><a href="{!seller_contracts}"
+                                        target="_blank">
+                                        <font color="black">Grouped by Close Month - YTD</font>
+                                    </a></b>
+                                <span class="tooltiptext">Click to view full report</span></div>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <div class="slds-grid">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-scrollable_y slds-m-top_small" id="CR-table6_div">
+
+                            </div>
+                            Status = Closed, RecordType = Seller, CloseDate = YTD
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var map = new Object();
+        map["1"] = "January";
+        map["2"] = "February";
+        map["3"] = "March";
+        map["4"] = "April";
+        map["5"] = "May";
+        map["6"] = "June";
+        map["7"] = "July";
+        map["8"] = "August";
+        map["9"] = "September";
+        map["10"] = "October";
+        map["11"] = "November";
+        map["12"] = "December";
+
+        function func(a) {
+            console.debug('-================-------------', a);
+            CompanySummaryController.FetchData(a, function (Result, event) {
+                if (event.status) {
+                    console.log('>>>Result>>CompanySummaryController', Result);
+                    createClientReviews(Result, a);
+                } else {
+                    console.log(event.message);
+                }
+            });
+        }
+
+        function createClientReviews(data) {
+            console.log('>>>>>>CompanySummaryController>>>>' + data);
+            var table = '';
+            var items = data.map(function (item) {
+                var metrics = {
+                    month: item.month || '',
+                    count1: item.count1 || 0 ,
+                    comission: item.commission || 0.00,
+                }
+                console.log('---metrics---',metrics);
+                return metrics;
+            })
+
+
+            table +=
+                '<table class="slds-table slds-table_bordered" id="CR1-Table">' +
+                '<thead>' +
+                '<tr class="blue-bg">' +
+                '<th>Contract Date</th>' +
+                '<th>Record Count</th>' +
+                '<th>Sum of Net Transaction Commission</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
+            var totals = 0;
+            var sum = 0.0;
+            for (i = 0; i < items.length; i++) {
+            console.log('****commission*****'+items[i].comission);
+                table += '   <tr class="titlerow">' +
+                    '<td>' +
+                    '   <span class="slds-truncate" title="' + items[i].month + '">' +
+                    '      ' + map[items[i].month] + ' ' +
+                    '   </span>' +
+                    '</td>' +
+                    '<td class="rowDataSd">' + items[i].count1 + '</td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].count1 + '">$' + numberWithCommas(Math.round(items[i].comission)) +
+                    '</span></td>' +
+                    '</tr>';
+                totals += items[i].count1; //Sum of Record Count
+                sum += items[i].comission; //Sum of Net Transaction Commission
+            }
+            table += '<tr class="RowTotal"><td>Total</td><td class="totals"></td><td class="sum"></td></tr>'
+            table += '</tbody></table>';
+            console.log('-----------', sum);
+            console.log('-----------', totals);
+            totals = numberWithCommas(totals);
+            sum=Math.round(sum);
+            sum = numberWithCommas(sum);
+            // if(totals!=0 && sum !=0){
+            $("#CR-table1_div").html(table);
+            //}
+            //else  
+            //$("#CR-table1_div").html('No Record Found');
+            $('.totals').html(totals);
+            $('.sum').html('$' + sum);
+        }
+        //Closed Contracts - Commissions
+        function func1(a) {
+            CompanySummaryController.FetchData_2(a, function (Result, event) {
+                if (event.status) {
+                    console.log('>>>Result>>CompanySummaryController', Result);
+                    createClientReviews2(Result);
+                } else {
+                    console.log(event.message);
+                }
+            });
+        }
+
+        function createClientReviews2(data) {
+            console.log('>>>>>>CompanySummaryController>>>>' + data);
+            var table1 = '';
+            var items = data.map(function (item) {
+                var metrics = {
+                    month: item.month || '',
+                    count1: item.count1 || 0,
+                    comission: item.commission || 0.00,
+                }
+                return metrics;
+            })
+            var totals = 0;
+            sum = 0;
+            table1 +=
+                '<table class="slds-table slds-table_bordered" id="CR2-Table">' +
+                '<thead>' +
+                '<tr class="blue-bg">' +
+                '<th>Close Date</th>' +
+                '<th>Record Count</th>' +
+                '<th>Sum of Net Transaction Commission</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
+            for (i = 0; i < items.length; i++) {
+                table1 += '   <tr>' +
+                    '<td>' +
+                    '   <span class="slds-truncate" title="' + items[i].month + '">' +
+                    '      ' + map[items[i].month] + ' ' +
+                    '   </span>' +
+                    '</td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].count1 + '">' + items[i].count1 +
+                    '</span></td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].comission + '">$' + numberWithCommas(Math.round(items[i].comission)) +
+                    '</span></td>' +
+                    '</tr>';
+                totals += Number(items[i].count1);
+                sum += Number(items[i].comission);
+            }
+            table1 += '<tr class="RowTotal"><td>Total</td><td class="totals1"></td><td class="sum1"></td></tr>'
+            table1 += ' </tbody></table>';
+            console.log('aaaa', table1);
+            console.log('------2-----', totals);
+            totals = numberWithCommas(totals);
+            sum= Math.round(sum);
+            sum = numberWithCommas(sum);
+            $("#CR-table2_div").html(table1);
+            $('.totals1').html(totals);
+            $('.sum1').html('$' + sum);
+        }
+        //Closed Contracts - Buyer  
+        function func2(a) {
+            CompanySummaryController.FetchData_3(a, function (Result, event) {
+                if (event.status) {
+                    console.log('>>>Result>>CompanySummaryController', Result);
+                    createClientReviews1(Result);
+                } else {
+                    console.log(event.message);
+                }
+            });
+        }
+
+        function createClientReviews1(data) {
+            console.log('>>>>>>CompanySummaryController>>>>' + data);
+            var table2 = '';
+            var items = data.map(function (item) {
+                var metrics = {
+                    month: item.month || '',
+                    count1: item.count1 || 0,
+                    comission: item.commission || 0.00,
+                    salesprice: item.salesprice || 0.00,
+                }
+                return metrics;
+            })
+            var totals = 0;
+            var price = 0;
+            sum = 0;
+            table2 +=
+                '<table class="slds-table slds-table_bordered" id="CR3-Table">' +
+                '<thead>' +
+                '<tr class="blue-bg">' +
+                '<th>Close Date</th>' +
+                '<th>Record Count</th>' +
+                '<th>Sum of Net Transaction Commission</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
+            for (i = 0; i < items.length; i++) {
+                table2 += '   <tr>' +
+                    '<td>' +
+                    '   <span class="slds-truncate" title="' + items[i].month + '">' +
+                    '      ' + map[items[i].month] + ' ' +
+                    '   </span>' +
+                    '</td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].count1 + '">' + items[i].count1 +
+                    '</span></td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].comission + '">$' + numberWithCommas(Math.round(items[i].comission)) +
+                    '</span></td>' +
+                    '</tr>';
+                totals += Number(items[i].count1);
+                sum += items[i].comission;
+                price += items[i].salesprice;
+            }
+            table2 += '<tr class="RowTotal"><td>Total</td><td class="totals3"></td><td class="sum3"></td></tr>' +
+                '</tbody></table>';
+            table2 += '<br><table class="slds-table slds-table_bordered">' +
+                '<tbody>' +
+                '<tr class="RowTotal"><td><a href="https://mcre.my.salesforce.com/00O1Q0000089RM5?dbw=1&colDt_s=1/1/{!selectedYear}&colDt_e=12/31/{!selectedYear}" target="_blank"><font color="black">Avg Buyer Sales Price</font></a></td><td class="price1"></td></tr>' +
+                '<tr class="RowTotal"><td><a href="https://mcre.my.salesforce.com/00O1Q0000089RM5?dbw=1&colDt_s=1/1/{!selectedYear}&colDt_e=12/31/{!selectedYear}" target="_blank"><font color="black">Avg Commission per Buyer\'s Sale</font></a></td><td class="avg1"></td></tr>' +
+                ' </tbody>' +
+                '</table>';
+            var avg = 0;
+            avg = sum / totals;
+            var price1 = 0;
+            price1 = price / totals;
+            console.log('aaaa', table2);
+            totals = numberWithCommas(totals);
+            sum = numberWithCommas(Math.round(sum));
+            avg = numberWithCommas(Math.round(avg));
+            price1 = numberWithCommas(Math.round(price1));
+            $("#CR-table3_div").html(table2);
+            $('.totals3').html(totals);
+            $('.sum3').html('$' + sum);
+            $('.avg1').html('$' + avg);
+            $('.price1').html('$' + price1);
+        }
+        //Pending Contracts Per Month 
+        function func3(a) {
+            CompanySummaryController.FetchData_4(a, function (Result, event) {
+                if (event.status) {
+                    console.log('>>>Result>>CompanySummaryController', Result);
+                    createClientReviews3(Result);
+                } else {
+                    console.log(event.message);
+                }
+            });
+        }
+
+        function createClientReviews3(data) {
+            console.log('>>>>>>CompanySummaryController>>>>' + data);
+            var table3 = '';
+            var items = data.map(function (item) {
+                var metrics = {
+                    month: item.month || '',
+                    count1: item.count1 || 0,
+                    comission: item.commission || 0.00,
+                    buyerPercent : item.buyerPercent || 0.00 ,
+                    sellerPercent : item.sellerPercent || 0.00
+                }
+                return metrics;
+            })
+            var totals = 0;
+            sum = 0;
+            table3 +=
+                '<table class="slds-table slds-table_bordered" id="CR4-Table">' +
+                '<thead>' +
+                '<tr class="blue-bg">' +
+                '<th>Close Date</th>' +
+                '<th>Record Count</th>' +
+                '<th>Sum of Net Transaction Commission</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
+            for (i = 0; i < items.length; i++) {
+                table3 += '   <tr>' +
+                    '<td>' +
+                    '   <span class="slds-truncate" title="' + items[i].month + '">' +
+                    '      ' + map[items[i].month] + ' ' +
+                    '   </span>' +
+                    '</td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].count1 + '">' + items[i].count1 +
+                    '</span></td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].comission + '">$' + numberWithCommas(Math.round(items[i].comission)) +
+                    '</span></td>' +
+                    '</tr>';
+                totals += Number(items[i].count1);
+                sum += items[i].comission;
+            }
+            table3 += '<tr class="RowTotal"><td>Total</td><td class="totals4"></td><td class="sum4"></td></tr>'
+            table3 += ' </tbody></table>';
+            table3 += '<p>Status = Pending, Close Date = YTD</p>';
+            // added by charu to show buyer percent and seller percent as per first widget.
+            table3 +='<br><table class="slds-table slds-table_bordered">' +
+                       '<tbody>'+ 
+                      '<tr class="RowTotal"><td colspan="2"><a href="https://mcre.my.salesforce.com/00O1Q000007rt2XUAQ?dbw=1&colDt_s=1/1/{!selectedYear}&colDt_e=12/31/{!selectedYear}" title ="Click to view full report" target="_blank"><font color="black">Buyer %</font></a></td><td style="padding-right: 50px;">'+items[11].buyerPercent+'%</td></tr>' +
+                      '<tr class="RowTotal"><td colspan="2"><a href="https://mcre.my.salesforce.com/00O1Q000007rt2WUAQ?dbw=1&colDt_s=1/1/{!selectedYear}&colDt_e=12/31/{!selectedYear}" title="Click to view full report" target="_blank"><font color="black">Seller %</font></a></td><td style="padding-right: 50px;">'+items[11].sellerPercent+'%</td></tr>' +
+                      '</tbody></table>';
+                      
+            console.log('aaaa', table3);
+            totals = numberWithCommas(totals);
+            sum = numberWithCommas(Math.round(sum));
+            $("#CR-table4_div").html(table3);
+            $('.totals4').html(totals);
+            $('.sum4').html('$' + sum);
+        }
+        //Closed Contracts - Sales Volume
+        function func4(a){
+            CompanySummaryController.FetchData_5(a, function (Result, event) {
+                if (event.status) {
+                    console.log('>>>Result>>CompanySummaryController', Result);
+                    createClientReviews4(Result);
+                } else {
+                    console.log(event.message);
+                }
+            });
+        }
+
+        function createClientReviews4(data) {
+            console.log('>>>>>>CompanySummaryController>>>>' + data);
+            var table4 = '';
+            var items = data.map(function (item) {
+                var metrics = {
+                    month: item.month || '0',
+                    count1: item.count1 || '0',
+                    comission: item.commission || 0.00,
+                }
+                return metrics;
+            })
+            totals = 0;
+            sum = 0;
+            table4 +=
+                '<table class="slds-table slds-table_bordered" id="CR5-Table">' +
+                '<thead>' +
+                '<tr class="blue-bg">' +
+                '<th>Close Date</th>' +
+                '<th>Record Count</th>' +
+                '<th>Sum of Actual Sale Price</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
+            for (i = 0; i < items.length; i++) {
+                table4 += '   <tr>' +
+                    '<td>' +
+                    '   <span class="slds-truncate" title="' + items[i].month + '">' +
+                    '      ' + map[items[i].month] + ' ' +
+                    '   </span>' +
+                    '</td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].count1 + '">' + items[i].count1 +
+                    '</span></td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].comission + '">$' + numberWithCommas(Math.round(items[i].comission)) +
+                    '</span></td>' +
+                    '</tr>';
+                totals += Number(items[i].count1);
+                sum += items[i].comission;
+            }
+            table4 += '<tr class="RowTotal"><td>Total</td><td class="totals5"></td><td class="sum5"></td></tr>'
+            table4 += ' </tbody></table>';
+            console.log('aaaa', table4);
+            totals = numberWithCommas(totals);
+            sum = numberWithCommas(Math.round(sum));
+            $("#CR-table5_div").html(table4);
+            $('.totals5').html(totals);
+            $('.sum5').html('$' + sum);
+        }
+        //Closed Contracts - Seller   
+        function func5(a) {
+            CompanySummaryController.FetchData_6(a, function (Result, event) {
+                if (event.status) {
+                    console.log('>>>Result>>CompanySummaryController', Result);
+                    createClientReviews5(Result);
+                } else {
+                    console.log(event.message);
+                }
+            });
+        }
+
+        function createClientReviews5(data) {
+            console.log('>>>>>>CompanySummaryController>>>>' + data);
+            var table5 = '';
+            var items = data.map(function (item) {
+                var metrics = {
+                    month: item.month || '',
+                    count1: item.count1 || 0,
+                    comission: item.commission || 0.00,
+                    salesprice: item.salesprice || 0.00,
+                }
+                return metrics;
+            })
+            totals = 0;
+            sum = 0;
+            var price = 0;
+            var avg=0;
+            table5 += '<table class="slds-table slds-table_bordered" id="CR6-Table">' +
+                '<thead>' +
+                '<tr class="blue-bg">' +
+                '<th>Close Date</th>' +
+                '<th>Record Count</th>' +
+                '<th>Sum of Net Transaction Commission</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
+            for (i = 0; i < items.length; i++) {
+                table5 += '   <tr>' +
+                    '<td>' +
+                    '   <span class="slds-truncate" title="' + items[i].month + '">' +
+                    '      ' + map[items[i].month] + ' ' +
+                    '   </span>' +
+                    '</td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].count1 + '">' + items[i].count1 +
+                    '</span></td>' +
+                    '<td><span class="slds-truncate" title="' + items[i].comission + '">$' + numberWithCommas(Math.round(items[i].comission)) +
+                    '</span></td>' +
+                    '</tr>';
+                totals += Number(items[i].count1);
+                sum += items[i].comission;
+                price += items[i].salesprice;
+            }
+            table5 += '<tr class="RowTotal"><td>Total</td><td class="totals6"></td><td class="sum6"></td></tr>' +
+                '</tbody></table>';
+            table5 += '<br><table class="slds-table slds-table_bordered" id="CR6-Table">' +
+                '<body>' +
+
+                '<tr class="RowTotal"><td><a href="https://mcre.my.salesforce.com/00O1Q0000089RM6?dbw=1&colDt_s=1/1/{!selectedYear}&colDt_e=12/31/{!selectedYear}" target="_blank"><font color="black">Avg Seller Sales Price</font></a></td><td class="price"></td><td></td></tr>' +
+                '<tr class="RowTotal"><td><a href="https://mcre.my.salesforce.com/00O1Q0000089RM6?dbw=1&colDt_s=1/1/{!selectedYear}&colDt_e=12/31/{!selectedYear}" target="_blank"><font color="black">Avg Commission per Seller\'s Sale</font></a></td><td class="avg2"></td><td></td></tr>' +
+                '</tbody></table>';
+            console.log('aaaa', table5);
+            avg = Number(sum / totals).toFixed(0);
+            price1 = Math.round(price / totals);
+            totals = numberWithCommas(totals);
+            totals = numberWithCommas(totals);
+            sum = numberWithCommas(Math.round(sum));
+            
+            
+            avg = numberWithCommas(avg);
+            price1 = numberWithCommas(price1);
+            $("#CR-table6_div").html(table5);
+            $('.totals6').html(totals);
+            $('.sum6').html('$' + sum);
+            $('.avg2').html('$' + avg);
+            $('.price').html('$' + price1);
+        }
+    </script>
+</apex:component>

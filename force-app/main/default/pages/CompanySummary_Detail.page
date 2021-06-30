@@ -1,0 +1,1165 @@
+<apex:page sidebar="false" title="CompanySummary_Detail" controller="CompanySummaryDetail_360DC" doctype="html-5.0">
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <link rel="stylesheet" type="text/css" href="../../../codebase/fonts/font_roboto/roboto.css"/>
+        <link rel="stylesheet" type="text/css" href="../../../codebase/dhtmlx.css"/>
+        <script src="../../../codebase/dhtmlx.js"></script>
+        
+        <apex:stylesheet value="{!URLFOR($Resource.MCRERes, 'css/jquery.qtip.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MCRERes, 'css/jquery.dataTables.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MCRERes, 'css/jquery-ui.min.css')}"/>
+
+        <apex:includeScript value="{!URLFOR($Resource.MCRERes, 'js/jquery.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MCRERes, 'js/jquery.qtip.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MCRERes, 'js/jquery.dataTables.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MCRERes, 'js/jquery-ui.min.js')}"/>   
+        
+        <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" /> -->
+        
+        <!-- <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" />
+        <apex:includeScript value="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js" /> -->
+
+        <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> -->
+        <!-- <link rel="stylesheet" type="text/css" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" /> -->
+        <apex:slds />
+        <style>
+            tr.group,
+            tr.group:hover {
+                background-color: #ddd !important;
+            }
+            .wrapper {
+                max-width: 1400px;
+                margin: 20px auto; 
+            }
+            .slds-scope .slds-card__header {
+                padding: .75rem .75rem;
+                background: #e3e5ed;
+            }
+
+            .slds-scope .slds-table thead .blue-bg th {
+                background: rgba(21, 137, 238, 1);
+                color: #fff;
+            }
+            .slds-scope .slds-table thead .blue-bg th {
+                width: 25%;
+            }
+            /*.slds-scope .slds-scrollable_y, .slds-scope .slds-scrollable--y{
+                height: 100%;
+                max-height: 300px
+            }*/
+            .slds-scope .slds-form-element__label{
+                padding-top: 0px
+            }
+            /*styling data table*/
+
+            .slds-scope .dataTables_length {
+                position: relative;
+                float: left;
+                margin-left: 1rem;
+            }
+
+            .slds-scope .dataTables_length select {
+                background-color: #FFF;
+                color: #16325C;
+                border: 1px solid #D8DDE6 !important;
+                border-radius: 0.25rem;
+                transition: border 0.1s linear, background-color 0.1s linear;
+                height: 2.125rem;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                padding-left: 0.5rem;
+                padding-right: 1.5rem;
+            }
+
+            .slds-scope .dataTables_filter {
+                float: right;
+                margin-bottom: 10px;
+            }
+
+            .slds-scope .dataTables_filter input {
+                background-color: #FFF;
+                color: #16325C;
+                border: 1px solid #D8DDE6 !important;
+                border-radius: 0.25rem;
+                transition: border 0.1s linear, background-color 0.1s linear;
+                display: inline-block;
+                padding: 0 1rem 0 0.75rem;
+                line-height: 2.125rem;
+                min-height: calc(2.125rem + 2px);
+                margin-left: 0.5rem;
+                margin-right: 1rem;
+                Note: for IE;
+                width: 200px;
+            }
+
+            .slds-scope .dataTables_info {
+                margin: 1rem;
+                float: left;
+            }
+
+            .slds-scope .dataTables_paginate {
+                margin: 1rem;
+                float: right;
+            }
+
+            .slds-scope .dataTables_paginate a {
+                background: #fff;
+                border: 1px solid #ddd !important;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .slds-scope .dataTables_paginate .paginate_button {
+                border-radius: none;
+            }
+
+            .slds-scope .dataTables_paginate .paginate_button.current {
+                background: #0070d2;
+                color: #fff !important;
+                border-color: #0070d2 !important;
+                border-radius: 0;
+            }
+
+            .slds-scope .dataTables_paginate .paginate_button.current:hover {
+                border-color: #ddd !important;
+            }
+
+            .slds-scope .dataTables_paginate a:hover,
+            .slds-scope .dataTables_paginate a:active,
+            .slds-scope .dataTables_paginate a:focus {
+                text-decoration: none;
+                outline: 0;
+            }
+
+            .slds-scope .dataTables_paginate a:first-child {
+                border-radius: 4px 0 0 4px;
+            }
+
+            .slds-scope .dataTables_paginate a:last-child {
+                border-radius: 0 4px 4px 0;
+            }
+
+            .slds-scope .dataTables_paginate span>a {
+                border-radius: 0 !important;
+            }
+
+            table.dataTable.no-footer {
+                border-bottom: 1px solid rgb(221, 219, 218) !important;
+            }
+
+            .slds-scope .slds-button_brand {
+                background-color: rgb(3, 111, 210);
+                border-color: rgb(3, 111, 210);
+            }
+
+            .slds-scope .slds-button_brand:hover {
+                background: rgb(4, 94, 177);
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+            .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+                outline: none;
+                background-color: #036fd2;
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #036fd2), color-stop(100%, #036fd2));
+                background: -webkit-linear-gradient(top, #036fd2 0%, #036fd2 100%);
+                background: -moz-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);
+                background: -ms-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);
+                background: -o-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);
+                background: linear-gradient(to bottom, #036fd2 0%, #036fd2 100%);
+                box-shadow: inset 0 0 0px #036fd2;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+                background: #fff;
+            }
+
+            .dataTables_wrapper {
+                z-index: 0;
+            }
+            .wrapper .toltip{
+                font-size: 0.9rem;
+                width: 20px;
+                height: 20px;
+                border: 1px solid #2a1b07;
+                display: inline-block;
+                text-align: center;
+                border-radius: 50px;
+                color: #2a1b07;
+                font-weight: 600;
+                margin-left: 0.3rem;
+                text-decoration: none;
+            }
+            .wrapper .toltip:hover{
+                text-decoration: none;   
+                color: #2a1b07;
+            }
+            .qtip-dark{
+                background-color: #222222;
+            }
+        </style>
+    </head>
+    <body ><!-- onload="doOnLoad();" -->
+       <apex:form >
+            <div class="wrapper">
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='contracts',true,false)}">
+                    <div class="slds-card">
+                    <!-- <input type="button" name="a2" value="ungroup" onclick="myGrid.unGroup();"/>&nbsp;&nbsp;
+                    <input type="button"  name="q1" value="regroup by" onclick='myGrid.groupBy(document.getElementById("sel").value);'/> -->
+                        <div class="slds-grid slds-p-around_small">
+                            <div class="slds-col slds-size_1-of-3">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Group By:</label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-select_container">
+                                            <select class="slds-select" id="sel">
+                                                <option value="Closing Name">Closing Name</option>
+                                                <option value="Contract Date">Contract Date</option>
+                                                <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                <option value="Actual Sales Price">Actual Sales Price</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Contracts"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="All Closings where Status /= BustOut and Contract Date lies in date range">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                                <div class="slds-scrollable_y slds-m-top_small" id="gridbox">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Contract Date</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank">
+                                                            <apex:outputText value="{!closing.param1}" />
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}" />
+                                                    </td>
+                                                    <td>
+                                                        $<apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        $<apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div>
+                              </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='contracts_commission',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Closed Contracts - Commission"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="All Closings where status = closed and  Close Date lies in date range.">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                        
+                            <apex:outputPanel layout="block">
+                            <!-- <input type="button" name="a2" value="ungroup" onclick="myGrid.unGroup();"/>&nbsp;&nbsp;
+                            <input type="button"  name="q1" value="regroup by" onclick='myGrid.groupBy(document.getElementById("sel").value);'/> -->
+                                <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small" id="gridbox">
+                                
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Close Date</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank">
+                                                            <apex:outputText value="{!closing.param1}"/>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='sales_volume',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Closed Contracts - Sales Volume"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="All Closings where status = closed and  Close Date lies in date range.">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Close Date</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='pending',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Pending"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="All Closings where status = pending and  Close Date lies in date range">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Close Date</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank">
+                                                            <apex:outputText value="{!closing.param1}"/>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                 <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='buyer_contracts',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Closed Contracts(Buyer)"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="All Closings where status = closed and recordtype = buyer and Close Date lies in date range">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Close Date</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                     <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='seller_contracts',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Closed Contracts(Seller)"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="All Closings where status = closed and record type = seller and  Close Date lies in date range">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                               <th>Closing Name</th>
+                                                <th>Close Date</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                     <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='commission',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Commission"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="All Closings where status /= Bust Out and Close Date lies in date range">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                             <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                               <th>Closing Name</th>
+                                                <th>Closing Status</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                            <apex:variable var="count" value="{!1}"/>
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                             <apex:variable var="count" value="{!count+1}"/>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel> 
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='referralfee',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Referral Fee"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Closing Status</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='adminfee',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Admin Fees"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="All Closings where AdminFee checkbox is true and contract date lies in the date range">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Contract Date</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='closeddeals',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Closed Deals By City"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                               <th>Closing Name</th>
+                                                <th>City</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>  
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='attorney',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Attorney"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Attorney</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='lender',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Lender"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Lender</th>
+                                                <th>Net Transaction Commission</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                     <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!if($CurrentPage.parameters.db=='home_warranty',true,false)}">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2><span class="slds-text-heading_small slds-truncate"><apex:outputText value="Home Warranty"/></span>
+                                        <apex:outputPanel rendered="{!if($Profile.Name !='System Administrator',false,true)}">
+                                            <a class="toltip" title="">?</a>
+                                        </apex:outputPanel>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                      
+                        <div class="slds-card__body">
+                            <apex:outputPanel layout="block">
+                            <div class="slds-grid slds-p-around_small ">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Group By:</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <select class="slds-select" id="sel">
+                                                        <option value="Closing Name">Closing Name</option>
+                                                        <option value="Contract Date">Close Date</option>
+                                                        <option value="Net Transaction Commission">Net Transaction Commission</option>
+                                                        <option value="Actual Sales Price">Actual Sales Price</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-m-top_small">
+                                    <table class="slds-table slds-table_bordered myTable" id="myTable">
+                                        <thead>
+                                            <tr class="blue-bg">
+                                                <th>Closing Name</th>
+                                                <th>Lender</th>
+                                                <th>Home Warranty</th>
+                                                <th>Actual Sales price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!datalist}" var="closing">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/{!closing.param5}" target="_blank"><apex:outputText value="{!closing.param1}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param2}"/>
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputText value="{!closing.param3}"/>
+                                                    </td>
+                                                     <td>
+                                                        <apex:outputText value="{!closing.param4}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                 </div>
+        </apex:form>
+        <script>
+            function viewrecord(recordid){
+                console.log('---Method Called-----');
+                window.open("/'+recordid+'","_blank");
+            }
+            $("#sel").on('change', function(){
+                value = $(this).val();
+                if(value == "Closing Name"){
+                    var groupColumn = 0;
+                    callBack(groupColumn);
+                }
+                else if(value == "Contract Date"){
+                    var groupColumn = 1;
+                    callBack(groupColumn);
+                }
+                else if(value == "Net Transaction Commission"){
+                    var groupColumn = 2;
+                    callBack(groupColumn);
+                }
+                else{
+                    var groupColumn = 3;
+                    callBack(groupColumn);
+                }  
+            });
+
+            $(document).ready(function() {
+                var groupColumn = 1;
+                callBack(groupColumn);
+            });
+
+            function callBack(val){
+                var groupColumn = val;
+                var table = $('#myTable').DataTable({
+                    "columnDefs": [
+                        { "visible": true, "targets": groupColumn }
+                    ],
+                    "order": [[ groupColumn, 'asc' ]],
+                    "paging":   false,
+                    "info":     false,
+                    "destroy":  true,
+                    "drawCallback": function ( settings ) {
+                        var api = this.api();
+                        var rows = api.rows( {page:'current'} ).nodes();
+                        var last = null;
+                        // get set of grouped items
+                        var counts = {};
+                        api.column(groupColumn, {page:'current'} ).data().each(function(i) {
+                            counts[i] = (counts[i]||0) + 1;
+                        })
+
+                        // add header row in the table for group header
+                        api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                            if ( last !== group ) {
+                                $(rows).eq( i ).before(
+                                    '<tr class="group"><td colspan="4">'+group + ' (' + counts[group] +')' +'</td></tr>'
+                                );
+                                last = group;
+                            }
+                        });
+                    }
+                });
+            }
+            
+            
+        </script> 
+    </body>
+</html>
+</apex:page>
