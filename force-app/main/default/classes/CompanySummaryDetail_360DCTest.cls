@@ -13,7 +13,7 @@ public class CompanySummaryDetail_360DCTest {
         pba__Closing__c closing=new pba__Closing__c();
         closing.Closing_Status__c='closed';
         closing.Contract_Date_date__c=Date.today();
-        closing.RETHINK_Closed_Deal_Date__c=Date.today();
+        closing.ClosingDate__c=Date.today();
         closing.Actual_Sale_Price__c=2500;
         closing.Transaction_Commission_Flat_Fee__c=25;
         closing.Admin_Fee__c=true;
@@ -29,7 +29,7 @@ public class CompanySummaryDetail_360DCTest {
         pba__Closing__c closing1=new pba__Closing__c();
         closing1.Closing_Status__c='pending';
         closing1.Contract_Date_date__c=Date.today();
-        closing1.RETHINK_Closed_Deal_Date__c=Date.today();
+        closing1.ClosingDate__c=Date.today();
         closing1.Actual_Sale_Price__c=2500;
         closing1.Transaction_Commission_Flat_Fee__c=25;
         closing1.Admin_Fee__c=true;
@@ -67,7 +67,7 @@ public class CompanySummaryDetail_360DCTest {
         pba__Closing__c closing=new pba__Closing__c();
         closing.Closing_Status__c='closed';
         closing.Contract_Date_date__c=Date.today();
-        closing.RETHINK_Closed_Deal_Date__c=Date.today();
+        closing.ClosingDate__c=Date.today();
         closing.Actual_Sale_Price__c=2500;
         closing.Transaction_Commission_Flat_Fee__c=25;
         closing.Admin_Fee__c=true;
@@ -83,7 +83,7 @@ public class CompanySummaryDetail_360DCTest {
         pba__Closing__c closing1=new pba__Closing__c();
         closing1.Closing_Status__c='pending';
         closing1.Contract_Date_date__c=Date.today();
-        closing1.RETHINK_Closed_Deal_Date__c=Date.today();
+        closing1.ClosingDate__c=Date.today();
         closing1.Actual_Sale_Price__c=2500;
         closing1.Transaction_Commission_Flat_Fee__c=25;
         closing1.Admin_Fee__c=true;

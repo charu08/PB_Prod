@@ -81,59 +81,59 @@ public class CompanySummaryDetail_360DC {
         System.debug('------Contracts-----------'+datalist);
     }
     public void getContracts_commission(Integer year){
-    	closinglist=[select id,name,Net_Transaction_Commission__c,Actual_Sale_Price__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where 
-                        Closing_Status__c='closed' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Net_Transaction_Commission__c,Actual_Sale_Price__c,ClosingDate__c from pba__Closing__c where 
+                        Closing_Status__c='closed' and calendar_year(ClosingDate__c)=:year];
         if(!closinglist.isEmpty()){
 	        for(pba__Closing__c closing:closinglist){
-	        	if(closing!=null & closing.RETHINK_Closed_Deal_Date__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
-		        	datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.RETHINK_Closed_Deal_Date__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
-	        	/*if(modulecountMap.containsKey(String.valueof(closing.RETHINK_Closed_Deal_Date__c.month()))){
-	        		Integer count = modulecountMap.get(String.valueof(closing.RETHINK_Closed_Deal_Date__c.month()));
+	        	if(closing!=null & closing.ClosingDate__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
+		        	datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.ClosingDate__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
+	        	/*if(modulecountMap.containsKey(String.valueof(closing.ClosingDate__c.month()))){
+	        		Integer count = modulecountMap.get(String.valueof(closing.ClosingDate__c.month()));
 	        		count++;
-	        		modulecountMap.put(String.valueof(closing.RETHINK_Closed_Deal_Date__c.month()),count);
+	        		modulecountMap.put(String.valueof(closing.ClosingDate__c.month()),count);
 	        	}
 	        	else
-	        		modulecountMap.put(String.valueof(closing.RETHINK_Closed_Deal_Date__c.month()),1);*/
+	        		modulecountMap.put(String.valueof(closing.ClosingDate__c.month()),1);*/
 	        }
         }  
         System.debug('-----------------'+datalist);
     }
     public void getSales_volume(Integer year){
-    	closinglist=[select id,name,Net_Transaction_Commission__c,Actual_Sale_Price__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c 
-                        where Closing_Status__c='Closed' and RETHINK_Closed_Deal_Date__c!=null and 
-                            calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Net_Transaction_Commission__c,Actual_Sale_Price__c,ClosingDate__c from pba__Closing__c 
+                        where Closing_Status__c='Closed' and ClosingDate__c!=null and 
+                            calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-        	if(closing!=null & closing.RETHINK_Closed_Deal_Date__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
-	        	datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.RETHINK_Closed_Deal_Date__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
+        	if(closing!=null & closing.ClosingDate__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
+	        	datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.ClosingDate__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
         }
         System.debug('-----------------'+datalist);
     }
     public void getPending(Integer year){
-    	closinglist=[select id,name,Net_Transaction_Commission__c,RETHINK_Closed_Deal_Date__c,Actual_Sale_Price__c from pba__Closing__c where Closing_Status__c='Pending' and Closing_Status__c!='Pending Bust Out' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Net_Transaction_Commission__c,ClosingDate__c,Actual_Sale_Price__c from pba__Closing__c where Closing_Status__c='Pending' and Closing_Status__c!='Pending Bust Out' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-        	if(closing!=null & closing.RETHINK_Closed_Deal_Date__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
-	        		datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.RETHINK_Closed_Deal_Date__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
+        	if(closing!=null & closing.ClosingDate__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
+	        		datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.ClosingDate__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
         }
         System.debug('-----------------'+datalist);
     }
     public void getBuyer_contracts(Integer year){
-    	closinglist=[select id,name,Net_Transaction_Commission__c,Actual_Sale_Price__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='closed' and RecordType.name='Buyer Rep' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Net_Transaction_Commission__c,Actual_Sale_Price__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='closed' and RecordType.name='Buyer Rep' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-        	if(closing!=null & closing.RETHINK_Closed_Deal_Date__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
-	        	datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.RETHINK_Closed_Deal_Date__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
+        	if(closing!=null & closing.ClosingDate__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
+	        	datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.ClosingDate__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
         }
         System.debug('-----------------'+datalist);
     }
     public void getSeller_contracts(Integer year){
-    	closinglist=[select id,name,Net_Transaction_Commission__c,Actual_Sale_Price__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='Closed' and RecordType.name='Seller Rep' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Net_Transaction_Commission__c,Actual_Sale_Price__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='Closed' and RecordType.name='Seller Rep' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-        	if(closing!=null & closing.RETHINK_Closed_Deal_Date__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
-	        	datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.RETHINK_Closed_Deal_Date__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
+        	if(closing!=null & closing.ClosingDate__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
+	        	datalist.add(new Wrapper_HyperlinkData(closing.name,mapMonthToName.get(closing.ClosingDate__c.month()),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
         }
         System.debug('-----------------'+datalist);
     }
     public void getCommission(Integer year){
-    	closinglist=[select id,name,Actual_Sale_Price__c,Net_Transaction_Commission__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c!='Bust Out' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Actual_Sale_Price__c,Net_Transaction_Commission__c,Closing_Status__c,ClosingDate__c from pba__Closing__c where Closing_Status__c!='Bust Out' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
         	if(closing!=null & closing.Closing_Status__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
 	        	datalist.add(new Wrapper_HyperlinkData(closing.name,String.valueof(closing.Closing_Status__c),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
@@ -141,9 +141,9 @@ public class CompanySummaryDetail_360DC {
         System.debug('-----------------'+datalist);
     }
     public void getReferralfee(Integer year){
-    	closinglist=[select id,name,Referral_Amount__c,Net_Transaction_Commission__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c,Actual_Sale_Price__c from pba__Closing__c where Closing_Status__c!='Bust Out' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Referral_Amount__c,Net_Transaction_Commission__c,Closing_Status__c,ClosingDate__c,Actual_Sale_Price__c from pba__Closing__c where Closing_Status__c!='Bust Out' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-        	if(closing!=null & closing.RETHINK_Closed_Deal_Date__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
+        	if(closing!=null & closing.ClosingDate__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
 	        	datalist.add(new Wrapper_HyperlinkData(closing.name,String.valueof(closing.Closing_Status__c),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
         }
         System.debug('-----------------'+datalist);
@@ -157,7 +157,7 @@ public class CompanySummaryDetail_360DC {
         System.debug('-----------------'+datalist);
     }
     public void getClosedDeals(){
-    	closinglist=[select id,name,Net_Transaction_Commission__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c,City__c,Actual_Sale_Price__c from pba__Closing__c where City__c!=null and Closing_Status__c='Closed' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Net_Transaction_Commission__c,Closing_Status__c,ClosingDate__c,City__c,Actual_Sale_Price__c from pba__Closing__c where City__c!=null and Closing_Status__c='Closed' and calendar_year(ClosingDate__c)=:year];
     	for(pba__Closing__c closing:closinglist){
         	if(closing!=null & closing.City__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
 	        	datalist.add(new Wrapper_HyperlinkData(closing.name,String.valueof(closing.City__c),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
@@ -166,8 +166,8 @@ public class CompanySummaryDetail_360DC {
     }
     public void getAttorney(){
     	closinglist=[select id,name,Attorney_Company__r.name,Net_Transaction_Commission__c,Closing_Status__c,
-                        RETHINK_Closed_Deal_Date__c,Actual_Sale_Price__c from pba__Closing__c where Closing_Status__c='closed'
-                         and Attorney_is_Preferred_Vendor__c =true and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+                        ClosingDate__c,Actual_Sale_Price__c from pba__Closing__c where Closing_Status__c='closed'
+                         and Attorney_is_Preferred_Vendor__c =true and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
         	if(closing!=null & closing.Attorney_Company__r.name!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
 	        	datalist.add(new Wrapper_HyperlinkData(closing.name,String.valueof(closing.Attorney_Company__r.name),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
@@ -175,15 +175,15 @@ public class CompanySummaryDetail_360DC {
         System.debug('-----------------'+datalist);
     }
     public void getLender(){
-    	closinglist=[select id,name,Lender_Company__r.name,Net_Transaction_Commission__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c,Actual_Sale_Price__c from pba__Closing__c where Closing_Status__c='closed' and Lender_is_Preferred_Vendor__c =true and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Lender_Company__r.name,Net_Transaction_Commission__c,Closing_Status__c,ClosingDate__c,Actual_Sale_Price__c from pba__Closing__c where Closing_Status__c='closed' and Lender_is_Preferred_Vendor__c =true and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-        	if(closing!=null & closing.RETHINK_Closed_Deal_Date__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
+        	if(closing!=null & closing.ClosingDate__c!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
 	        	datalist.add(new Wrapper_HyperlinkData(closing.name,String.valueof(closing.Lender_Company__r.name),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));
         }
         System.debug('-----------------'+datalist);
     }
     public void getHome_warranty(){
-    	closinglist=[select id,name,Home_Warranty__r.name,Net_Transaction_Commission__c,Closing_Status__c,Actual_Sale_Price__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='closed' and Home_Warranty_is_Preferred_Vendor__c =true and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+    	closinglist=[select id,name,Home_Warranty__r.name,Net_Transaction_Commission__c,Closing_Status__c,Actual_Sale_Price__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='closed' and Home_Warranty_is_Preferred_Vendor__c =true and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
         	if(closing!=null & closing.Home_Warranty__r.name!=null && closing.Net_Transaction_Commission__c!=null && closing.Actual_Sale_Price__c!=null)
 	        	datalist.add(new Wrapper_HyperlinkData(closing.name,String.valueof(closing.Home_Warranty__r.name),String.valueOf(closing.Net_Transaction_Commission__c),String.valueof(closing.Actual_Sale_Price__c),closing.Id));

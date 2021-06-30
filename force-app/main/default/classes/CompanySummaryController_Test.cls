@@ -12,7 +12,7 @@ public class CompanySummaryController_Test {
         pba__Closing__c closing=new pba__Closing__c();
         closing.Closing_Status__c='closed';
         closing.Contract_Date_date__c=Date.today();
-        closing.RETHINK_Closed_Deal_Date__c=Date.today();
+        closing.ClosingDate__c=Date.today();
         closing.Actual_Sale_Price__c=2500;
         closing.Transaction_Commission_Flat_Fee__c=25;
         closing.Admin_Fee__c=true;
@@ -28,7 +28,7 @@ public class CompanySummaryController_Test {
         pba__Closing__c closing2=new pba__Closing__c();
         closing2.Closing_Status__c='closed';
         closing2.Contract_Date_date__c=Date.today();
-        closing2.RETHINK_Closed_Deal_Date__c=Date.today();
+        closing2.ClosingDate__c=Date.today();
         closing2.Actual_Sale_Price__c=2500;
         closing2.RecordTypeId=devRecordTypeId;
         closing2.Transaction_Commission_Flat_Fee__c=25;
@@ -44,7 +44,7 @@ public class CompanySummaryController_Test {
         pba__Closing__c closing1=new pba__Closing__c();
         closing1.Closing_Status__c='pending';
         closing1.Contract_Date_date__c=Date.today();
-        closing1.RETHINK_Closed_Deal_Date__c=Date.today();
+        closing1.ClosingDate__c=Date.today();
         closing1.Actual_Sale_Price__c=2500;
         closing1.Transaction_Commission_Flat_Fee__c=25;
         closing1.Admin_Fee__c=true;
@@ -54,7 +54,7 @@ public class CompanySummaryController_Test {
         pba__Closing__c closing4=new pba__Closing__c();
         closing4.Closing_Status__c='pending';
         closing4.Contract_Date_date__c=Date.today();
-        closing4.RETHINK_Closed_Deal_Date__c=Date.today();
+        closing4.ClosingDate__c=Date.today();
         closing4.Actual_Sale_Price__c=2500;
         closing4.Transaction_Commission_Flat_Fee__c=25;
         closing4.Admin_Fee__c=true;

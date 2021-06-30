@@ -20,19 +20,19 @@ public class CompanySummaryController {
         //Switch the URLs betweeen Salesforce Classic and Lightning
         system.debug('---------00O1Q0000089RM5--------'+URL.getSalesforceBaseUrl());
         if(UserInfo.getUiThemeDisplayed() == 'Theme3'){ //Salesforce Classic
-            contracts = '/00O1Q0000089RM9?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            contracts_commission = '/00O36000006wtS5?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            sales_vol = '/00O1Q0000089RM7?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            pending_contracts = '/00O1Q0000089RMA?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            buyer_contracts = '/00O1Q0000089RM5?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            seller_contracts = '/00O1Q0000089RM6?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            commission = '/00O1Q0000089RM3?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            referral_fee = '/00O36000006wv1m?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            admin_fee = '/00O1Q0000089RM2?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            closed_deals = '/00O36000006wtTr?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            attorney = '/00O1Q000007WPNx?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            lender = '/00O1Q000007WPO2?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
-            home_warranty = '/00O1Q0000089RM8?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            contracts = '/00O4W000007lwfq?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            contracts_commission = '/00O4W000007lwhI?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            sales_vol = '/00O4W000007lwhh?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            pending_contracts = '/00O4W000007lwiB?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            buyer_contracts = '/00O4W000007lww3?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            seller_contracts = '/00O4W000007lww8?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            commission = '/00O4W000007lwmw?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            referral_fee = '/00O4W000007m4jw?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            admin_fee = '/00O4W000007lwwh?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            closed_deals = '/00O4W000007lwv5?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            attorney = '/00O4W000007lwvA?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            lender = '/00O4W000007lwvF?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
+            home_warranty = '/00O4W000007lwvK?dbw=1&colDt_s=1/1/'+selectedYear+'&colDt_e=12/31/'+selectedYear;
         }
         else if(UserInfo.getUiThemeDisplayed() == 'Theme4d'){ //Salesforce Lightning
             contracts = '/one/one.app#/alohaRedirect/apex/CompanySummary_Detail?db=contracts&year='+selectedYear;
@@ -96,25 +96,25 @@ public class CompanySummaryController {
         map<Integer,Integer> mapMonthVsCount=new map<Integer,Integer>();    
         map<Integer,decimal> mapMonthVsCommission=new map<Integer,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Net_Transaction_Commission__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where 
-                        Closing_Status__c='closed' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+        closinglist=[select id,Net_Transaction_Commission__c,ClosingDate__c from pba__Closing__c where 
+                        Closing_Status__c='closed' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
             //Month Vs Record Count
-            if(mapMonthVsCount.containsKey(closing.RETHINK_Closed_Deal_Date__c.month())){
-                integer count=mapMonthVsCount.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsCount.containsKey(closing.ClosingDate__c.month())){
+                integer count=mapMonthVsCount.get(closing.ClosingDate__c.month());
                 count=count+1;
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),1);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),1);
             //Month Vs Net Transaction Sum Value
-            if(mapMonthVsCommission.containsKey(closing.RETHINK_Closed_Deal_Date__c.month()) && closing.Net_Transaction_Commission__c!=null){
-                decimal count=mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsCommission.containsKey(closing.ClosingDate__c.month()) && closing.Net_Transaction_Commission__c!=null){
+                decimal count=mapMonthVsCommission.get(closing.ClosingDate__c.month());
                 count=count+closing.Net_Transaction_Commission__c;
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),closing.Net_Transaction_Commission__c);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),closing.Net_Transaction_Commission__c);
         }//Fill Wrapper for all 12 months
         for(Integer i=1;i<=12;i++){
             wraplist.add(new Wrapper(i,mapMonthVsCount.get(i),mapMonthVsCommission.get(i)));
@@ -129,32 +129,32 @@ public class CompanySummaryController {
         map<Integer,decimal> mapMonthVsCommission=new map<Integer,decimal>();
          map<Integer,decimal> mapMonthVsSalesprice=new map<Integer,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Net_Transaction_Commission__c,Actual_Sale_Price__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='closed' and RecordType.name='MCRE Buyer Closing' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+        closinglist=[select id,Net_Transaction_Commission__c,Actual_Sale_Price__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='closed' and RecordType.name='MCRE Buyer Closing' and calendar_year(ClosingDate__c)=:year];
         system.debug('closinglist'+closinglist);
         for(pba__Closing__c closing:closinglist){
-            if(mapMonthVsCount.containsKey(closing.RETHINK_Closed_Deal_Date__c.month())){
-                integer count=Integer.valueof(mapMonthVsCount.get(closing.RETHINK_Closed_Deal_Date__c.month()));
+            if(mapMonthVsCount.containsKey(closing.ClosingDate__c.month())){
+                integer count=Integer.valueof(mapMonthVsCount.get(closing.ClosingDate__c.month()));
                 count=count+1;
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),1);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),1);
             
-            if(mapMonthVsCommission.containsKey(closing.RETHINK_Closed_Deal_Date__c.month()) && closing.Net_Transaction_Commission__c!=null){
-                decimal count=mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsCommission.containsKey(closing.ClosingDate__c.month()) && closing.Net_Transaction_Commission__c!=null){
+                decimal count=mapMonthVsCommission.get(closing.ClosingDate__c.month());
                 count=count+closing.Net_Transaction_Commission__c;
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),closing.Net_Transaction_Commission__c);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),closing.Net_Transaction_Commission__c);
             
-            if(mapMonthVsSalesprice.containsKey(closing.RETHINK_Closed_Deal_Date__c.month()) && closing.Actual_Sale_Price__c!=null){
-                decimal count=mapMonthVsSalesprice.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsSalesprice.containsKey(closing.ClosingDate__c.month()) && closing.Actual_Sale_Price__c!=null){
+                decimal count=mapMonthVsSalesprice.get(closing.ClosingDate__c.month());
                 count=(count!=null?count:0)+(closing.Actual_Sale_Price__c!=null?closing.Actual_Sale_Price__c:0);
-                mapMonthVsSalesprice.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsSalesprice.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsSalesprice.put(closing.RETHINK_Closed_Deal_Date__c.month(),closing.Actual_Sale_Price__c);
+                mapMonthVsSalesprice.put(closing.ClosingDate__c.month(),closing.Actual_Sale_Price__c);
             
         }
          system.debug('mapMonthVsSalesprice'+mapMonthVsSalesprice);
@@ -171,23 +171,23 @@ public class CompanySummaryController {
         map<Integer,Integer> mapMonthVsCount=new map<Integer,Integer>();    
         map<Integer,decimal> mapMonthVsCommission=new map<Integer,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Net_Transaction_Commission__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='Pending' and Closing_Status__c!='Pending Bust Out' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+        closinglist=[select id,Net_Transaction_Commission__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='Pending' and Closing_Status__c!='Pending Bust Out' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-            if(mapMonthVsCount.containsKey(closing.RETHINK_Closed_Deal_Date__c.month())){
-                integer count=mapMonthVsCount.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsCount.containsKey(closing.ClosingDate__c.month())){
+                integer count=mapMonthVsCount.get(closing.ClosingDate__c.month());
                 count=count+1;
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),1);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),1);
             
-            if(mapMonthVsCommission.containsKey(closing.RETHINK_Closed_Deal_Date__c.month()) && closing.Net_Transaction_Commission__c!=null){
-                decimal count=mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsCommission.containsKey(closing.ClosingDate__c.month()) && closing.Net_Transaction_Commission__c!=null){
+                decimal count=mapMonthVsCommission.get(closing.ClosingDate__c.month());
                 count=count+closing.Net_Transaction_Commission__c;
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),closing.Net_Transaction_Commission__c);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),closing.Net_Transaction_Commission__c);
         }
         
         // added by charu to show buyer percent and seller percent on the widget.
@@ -225,33 +225,33 @@ public class CompanySummaryController {
         map<Integer,Integer> mapMonthVsCount=new map<Integer,Integer>();    
         map<Integer,decimal> mapMonthVsCommission=new map<Integer,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Actual_Sale_Price__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c 
-                        where Closing_Status__c='Closed' and RETHINK_Closed_Deal_Date__c!=null and 
-                            calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+        closinglist=[select id,Actual_Sale_Price__c,ClosingDate__c from pba__Closing__c 
+                        where Closing_Status__c='Closed' and ClosingDate__c!=null and 
+                            calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-            if(mapMonthVsCount.containsKey(closing.RETHINK_Closed_Deal_Date__c.month())){
-                integer count=mapMonthVsCount.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsCount.containsKey(closing.ClosingDate__c.month())){
+                integer count=mapMonthVsCount.get(closing.ClosingDate__c.month());
                 count=count+1;
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),1);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),1);
             
-            System.debug('>>>>>$>>>>>>>>>>'+mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month()));
-            if(mapMonthVsCommission.containsKey(closing.RETHINK_Closed_Deal_Date__c.month()) && mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month())!=null && closing.Actual_Sale_Price__c != null){
-               System.debug('>>>>>>>>month1>>>>>>>'+closing.RETHINK_Closed_Deal_Date__c.month());
+            System.debug('>>>>>$>>>>>>>>>>'+mapMonthVsCommission.get(closing.ClosingDate__c.month()));
+            if(mapMonthVsCommission.containsKey(closing.ClosingDate__c.month()) && mapMonthVsCommission.get(closing.ClosingDate__c.month())!=null && closing.Actual_Sale_Price__c != null){
+               System.debug('>>>>>>>>month1>>>>>>>'+closing.ClosingDate__c.month());
                 decimal count1;
-                System.debug('>>>>>***>>>>>>>>>>'+mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month()));
-                count1=mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month());
-                System.debug('>>>>>>???>>>>>>>>>'+mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month()));
+                System.debug('>>>>>***>>>>>>>>>>'+mapMonthVsCommission.get(closing.ClosingDate__c.month()));
+                count1=mapMonthVsCommission.get(closing.ClosingDate__c.month());
+                System.debug('>>>>>>???>>>>>>>>>'+mapMonthVsCommission.get(closing.ClosingDate__c.month()));
                 System.debug('---------1-------'+closing.Actual_Sale_Price__c);
                 count1=count1+closing.Actual_Sale_Price__c;
                 System.debug('----------2------'+count1);
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),count1);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),count1);
             }
             else if(closing.Actual_Sale_Price__c != null){
-            System.debug('>>>>>>>>month>>>>>>>'+closing.RETHINK_Closed_Deal_Date__c.month());
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),closing.Actual_Sale_Price__c);}
+            System.debug('>>>>>>>>month>>>>>>>'+closing.ClosingDate__c.month());
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),closing.Actual_Sale_Price__c);}
         }
         
         System.debug('????????????????????'+mapMonthVsCommission.get(12));
@@ -269,31 +269,31 @@ public class CompanySummaryController {
         map<Integer,decimal> mapMonthVsCommission=new map<Integer,decimal>();
         map<Integer,decimal> mapMonthVsSalesprice=new map<Integer,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Net_Transaction_Commission__c,Actual_Sale_Price__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='Closed' and RecordType.name='MCRE Seller Closing' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+        closinglist=[select id,Net_Transaction_Commission__c,Actual_Sale_Price__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='Closed' and RecordType.name='MCRE Seller Closing' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
-            if(mapMonthVsCount.containsKey(closing.RETHINK_Closed_Deal_Date__c.month())){
-                integer count=mapMonthVsCount.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsCount.containsKey(closing.ClosingDate__c.month())){
+                integer count=mapMonthVsCount.get(closing.ClosingDate__c.month());
                 count=count+1;
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCount.put(closing.RETHINK_Closed_Deal_Date__c.month(),1);
+                mapMonthVsCount.put(closing.ClosingDate__c.month(),1);
             
-            if(mapMonthVsCommission.containsKey(closing.RETHINK_Closed_Deal_Date__c.month()) && closing.Net_Transaction_Commission__c!=null){
-                decimal count=mapMonthVsCommission.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsCommission.containsKey(closing.ClosingDate__c.month()) && closing.Net_Transaction_Commission__c!=null){
+                decimal count=mapMonthVsCommission.get(closing.ClosingDate__c.month());
                 count=count+closing.Net_Transaction_Commission__c;
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsCommission.put(closing.RETHINK_Closed_Deal_Date__c.month(),closing.Net_Transaction_Commission__c);
+                mapMonthVsCommission.put(closing.ClosingDate__c.month(),closing.Net_Transaction_Commission__c);
             
-            if(mapMonthVsSalesprice.containsKey(closing.RETHINK_Closed_Deal_Date__c.month()) && closing.Actual_Sale_Price__c!=null){
-                decimal count=mapMonthVsSalesprice.get(closing.RETHINK_Closed_Deal_Date__c.month());
+            if(mapMonthVsSalesprice.containsKey(closing.ClosingDate__c.month()) && closing.Actual_Sale_Price__c!=null){
+                decimal count=mapMonthVsSalesprice.get(closing.ClosingDate__c.month());
                 count=count+closing.Actual_Sale_Price__c;
-                mapMonthVsSalesprice.put(closing.RETHINK_Closed_Deal_Date__c.month(),count);
+                mapMonthVsSalesprice.put(closing.ClosingDate__c.month(),count);
             }
             else
-                mapMonthVsSalesprice.put(closing.RETHINK_Closed_Deal_Date__c.month(),closing.Actual_Sale_Price__c);
+                mapMonthVsSalesprice.put(closing.ClosingDate__c.month(),closing.Actual_Sale_Price__c);
         }
         for(Integer i=1;i<=12;i++){ 
             wraplist.add(new Wrapper(i,mapMonthVsCount.get(i),mapMonthVsCommission.get(i),mapMonthVsSalesprice.get(i)));
@@ -307,7 +307,7 @@ public class CompanySummaryController {
         map<String,Integer> mapMonthVsCount=new map<String,Integer>();  
         map<String,decimal> mapMonthVsCommission=new map<String,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Referral_Amount__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c!='Bust Out' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+        closinglist=[select id,Referral_Amount__c,Closing_Status__c,ClosingDate__c from pba__Closing__c where Closing_Status__c!='Bust Out' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
             if(mapMonthVsCount.containsKey(closing.Closing_Status__c)){
                 integer count=mapMonthVsCount.get(closing.Closing_Status__c);
@@ -341,7 +341,7 @@ public class CompanySummaryController {
         map<String,Integer> mapMonthVsCount=new map<String,Integer>();  
         map<String,decimal> mapMonthVsCommission=new map<String,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Lender_Company__r.name,Net_Transaction_Commission__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='closed' and Lender_is_Preferred_Vendor__c =true and calendar_year(RETHINK_Closed_Deal_Date__c)=:selectedYear];
+        closinglist=[select id,Lender_Company__r.name,Net_Transaction_Commission__c,Closing_Status__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='closed' and Lender_is_Preferred_Vendor__c =true and calendar_year(ClosingDate__c)=:selectedYear];
         integer totalRec=closinglist.size();
         for(pba__Closing__c closing:closinglist){
             if(mapMonthVsCount.containsKey(closing.Lender_Company__r.name)){
@@ -401,7 +401,7 @@ public class CompanySummaryController {
         map<String,Integer> mapMonthVsCount=new map<String,Integer>();  
         map<String,decimal> mapMonthVsCommission=new map<String,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Home_Warranty__r.name,Net_Transaction_Commission__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='closed' and Home_Warranty_is_Preferred_Vendor__c =true and calendar_year(RETHINK_Closed_Deal_Date__c)=:selectedYear];
+        closinglist=[select id,Home_Warranty__r.name,Net_Transaction_Commission__c,Closing_Status__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='closed' and Home_Warranty_is_Preferred_Vendor__c =true and calendar_year(ClosingDate__c)=:selectedYear];
         integer totalRec=closinglist.size();
         for(pba__Closing__c closing:closinglist){
             if(mapMonthVsCount.containsKey(closing.Home_Warranty__r.name)){
@@ -430,7 +430,7 @@ public class CompanySummaryController {
         map<String,Integer> mapMonthVsCount=new map<String,Integer>();    
         map<Integer,decimal> mapMonthVsCommission=new map<Integer,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Home_Inspector_Company__r.name,Net_Transaction_Commission__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='Closed' and Home_Inspector_is_Preferred_Vendor__c=true and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+        closinglist=[select id,Home_Inspector_Company__r.name,Net_Transaction_Commission__c,ClosingDate__c from pba__Closing__c where Closing_Status__c='Closed' and Home_Inspector_is_Preferred_Vendor__c=true and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
             if(mapMonthVsCount.containsKey(closing.Home_Inspector_Company__r.name)){
                 integer sum=mapMonthVsCount.get(closing.Home_Inspector_Company__r.name);
@@ -452,7 +452,7 @@ public class CompanySummaryController {
         map<String,decimal> mapMonthVsCount=new map<String,decimal>();  
         map<String,Integer> mapMonthVsCommission=new map<String,Integer>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Net_Transaction_Commission__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c,City__c from pba__Closing__c where City__c!=null and Closing_Status__c='Closed' and calendar_year(RETHINK_Closed_Deal_Date__c)=:selectedYear];
+        closinglist=[select id,Net_Transaction_Commission__c,Closing_Status__c,ClosingDate__c,City__c from pba__Closing__c where City__c!=null and Closing_Status__c='Closed' and calendar_year(ClosingDate__c)=:selectedYear];
         System.debug('------closing---------->>>'+closinglist);
         decimal totalRec;
         
@@ -522,7 +522,7 @@ public class CompanySummaryController {
         map<String,Integer> mapMonthVsCount=new map<String,Integer>();  
         map<String,decimal> mapMonthVsCommission=new map<String,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
-        closinglist=[select id,Net_Transaction_Commission__c,Closing_Status__c,RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c!='Bust Out' and calendar_year(RETHINK_Closed_Deal_Date__c)=:year];
+        closinglist=[select id,Net_Transaction_Commission__c,Closing_Status__c,ClosingDate__c from pba__Closing__c where Closing_Status__c!='Bust Out' and calendar_year(ClosingDate__c)=:year];
         for(pba__Closing__c closing:closinglist){
             if(mapMonthVsCount.containsKey(closing.Closing_Status__c)){
                 integer count=mapMonthVsCount.get(closing.Closing_Status__c);
@@ -557,8 +557,8 @@ public class CompanySummaryController {
         map<String,decimal> mapMonthVsCommission=new map<String,decimal>();
         list<pba__Closing__c> closinglist=new list<pba__Closing__c>();
         closinglist=[select id,Attorney_Company__r.name,Net_Transaction_Commission__c,Closing_Status__c,
-                        RETHINK_Closed_Deal_Date__c from pba__Closing__c where Closing_Status__c='closed'
-                         and Attorney_is_Preferred_Vendor__c =true and calendar_year(RETHINK_Closed_Deal_Date__c)=:selectedYear];
+                        ClosingDate__c from pba__Closing__c where Closing_Status__c='closed'
+                         and Attorney_is_Preferred_Vendor__c =true and calendar_year(ClosingDate__c)=:selectedYear];
         integer totalRec=closinglist.size();
         for(pba__Closing__c closing:closinglist){
             if(mapMonthVsCount.containsKey(closing.Attorney_Company__r.name)){
