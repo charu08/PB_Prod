@@ -1,0 +1,359 @@
+<!--Modified by charu on 26-Oct-2020. Coordinator replaced with Specialist and Scheduler with coordinator-->
+<apex:page title="Request for Repairs List" doctype="html-5.0">
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+            <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" />
+            <apex:includeScript value="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js" /> 
+            <script src="/soap/ajax/28.0/connection.js" type="text/javascript"></script>
+            <script src="/soap/ajax/28.0/apex.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                var __sfdcSessionId= '{!GETSESSIONID()}';
+            </script>
+            <apex:slds />
+            <style>
+                .slds-scope .slds-card__header {
+                    padding: .75rem .75rem;
+                    background: #e3e5ed;
+                }
+        
+                .slds-scope .slds-table thead .blue-bg th { 
+                    background-color: rgba(21, 137, 238, 1); 
+                    color: #fff;
+                }
+        
+                .slds-scope .slds-input.small {
+                    max-width: 120px;
+                }
+        
+                .slds-scope .slds-input.number {
+                    padding-right: 0;
+                }
+        
+                table.dataTable thead th,
+                table.dataTable thead td {
+                    border-bottom: 0px solid #111;
+                }
+        
+                .slds-scope .slds-table .footer-bg th,
+                .slds-scope .slds-table .footer-bg td {
+                    border-top: 1px solid #ddd !important;
+                    background: #e3e5ed;
+                }
+                /*  styles for data table  */
+        
+                .slds-scope .dataTables_length {
+                    position: relative;
+                    float: left;
+                    margin-left: 1rem;
+                }
+        
+                .slds-scope .dataTables_length select {
+                    background-color: #FFF;
+                    color: #16325C;
+                    border: 1px solid #D8DDE6 !important;
+                    border-radius: 0.25rem;
+                    transition: border 0.1s linear, background-color 0.1s linear;
+                    height: 2.125rem;
+                    -moz-appearance: none;
+                    -webkit-appearance: none;
+                    padding-left: 0.5rem;
+                    padding-right: 1.5rem;
+                }
+        
+                .slds-scope .dataTables_filter {
+                    float: right;
+                    margin-bottom: 10px;
+                }
+        
+                .slds-scope .dataTables_filter input {
+                    background-color: #FFF;
+                    color: #16325C;
+                    border: 1px solid #D8DDE6 !important;
+                    border-radius: 0.25rem;
+                    transition: border 0.1s linear, background-color 0.1s linear;
+                    display: inline-block;
+                    padding: 0 1rem 0 0.75rem;
+                    line-height: 2.125rem;
+                    min-height: calc(2.125rem + 2px);
+                    margin-left: 0.5rem;
+                    margin-right: 1rem;
+                    width: 200px;
+                }
+        
+                .slds-scope .dataTables_info {
+                    margin: 1rem;
+                    float: left;
+                }
+        
+                .slds-scope .dataTables_paginate {
+                    margin: 1rem;
+                    float: right;
+                }
+        
+                .slds-scope .dataTables_paginate a {
+                    background: #fff;
+                    border: 1px solid #ddd !important;
+                    padding: 0.5rem 0.75rem;
+                }
+        
+                .slds-scope .dataTables_paginate .paginate_button {
+                    border-radius: none;
+                }
+        
+                .slds-scope .dataTables_paginate .paginate_button.current {
+                    background: #0070d2;
+                    color: #fff !important;
+                    border-color: #0070d2 !important;
+                    border-radius: 0;
+                }
+        
+                .slds-scope .dataTables_paginate .paginate_button.current:hover {
+                    border-color: #ddd !important;
+                }
+        
+                .slds-scope .dataTables_paginate a:hover,
+                .slds-scope .dataTables_paginate a:active,
+                .slds-scope .dataTables_paginate a:focus {
+                    text-decoration: none;
+                    outline: 0;
+                }
+        
+                
+                .slds-scope .dataTables_paginate span>a {
+                    border-radius: 0 !important;
+                }
+        
+                table.dataTable.no-footer {
+                    border-bottom: 1px solid rgb(221, 219, 218) !important;
+                }
+        
+                .slds-scope .slds-button_brand {
+                    background-color: rgb(3, 111, 210);
+                    border-color: rgb(3, 111, 210);
+                }
+        
+                .slds-scope .slds-button_brand:hover {
+                    background: rgb(4, 94, 177);
+                }
+        
+                .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+                .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+                    outline: none;
+                    background-color: #036fd2;
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #036fd2), color-stop(100%, #036fd2));
+                    background: -webkit-linear-gradient(top, #036fd2 0%, #036fd2 100%);
+                    background: -moz-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);
+                    background: -ms-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);
+                    background: -o-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);
+                    background: linear-gradient(to bottom, #036fd2 0%, #036fd2 100%);
+                    box-shadow: inset 0 0 0px #036fd2;
+                }
+        
+                .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+                    background: #fff;
+                }
+        
+                .dataTables_wrapper {
+                    z-index: 0;
+                }
+        
+                .slds-scope .slds-table tr.shown + tr > td {
+                    padding: 0;
+                    background-color: #eee;
+                }
+            </style>
+        </head>
+        <body class="slds-scope">
+        <apex:form id="formId">
+            <div class="slds-card">
+                <!-- Header Start !-->
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title slds-truncate" title="Request for Repairs List">Request for Repairs List</h2>
+                        </div>
+                    </header>      
+                </div>
+                <!-- Header End !-->
+                <!-- Body Start !-->
+                <div class="slds-card__body">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_medium">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Filter</label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <Select class="slds-select selected" size="1" id="agentTypeRR" onchange="showHideAgentListRR()">
+                                            <option value='ClosingSpecialist' selected='selected'>Closing Specialist</option>
+                                            <option value='ClosingCoordinator'>Closing Coordinator</option>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>
+                        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-p-horizontal_medium">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Agents</label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <Select class="slds-select selected" size="1" id="ddlFilterRR1" onchange="initRR()">
+                                        </Select>
+                                        <Select class="slds-select selected" size="1" id="ddlFilterRR2" onchange="initRR()">
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>    
+                    </div> 
+                    <div class="slds-grid slds-wrap slds-m-top_large">
+                        <div class="slds-col">
+                            <div class="slds-scollable">
+                                <table id="CR-Table-RR" class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" style="width:100%">
+                                    <thead>
+                                        <tr class="blue-bg">
+                                            <th></th>
+                                            <th>Agent</th>
+                                            <th>Total Count</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>        
+                </div>
+               <!-- Body End !-->
+            </div>
+            
+            <script>
+                $(document).ready(function(){
+                    $("#ddlFilterRR2").hide();
+                    loadAgentsRR();
+                    showHideAgentListRR();
+                });
+                function loadAgentsRR(){
+                    var soql = "Select Id,Name from User where isActive=true and Profilename__c in ";
+                    let soqlForCoordinator = soql+"('MCRE Closing Coordinator') order by Name";
+                    let soqlForScheduler = soql + "('Closing Scheduler Profile') order by Name";
+                    
+                    let coordinatorData = getDataRR(soqlForCoordinator);
+                    let schedulerData = getDataRR(soqlForScheduler);
+                    
+                    $("#ddlFilterRR1").append("<option value='All' selected='selected'>All</option>");
+                    $("#ddlFilterRR2").append("<option value='All' selected='selected'>All</option>");
+                    
+                    $(coordinatorData).each(function(){
+                        $("#ddlFilterRR1").append("<option value='"+this.Id+"' >"+this.Name+"</option>");
+                    });
+                    
+                    $(schedulerData).each(function(){
+                        $("#ddlFilterRR2").append("<option value='"+this.Id+"' >"+this.Name+"</option>");
+                    });
+                 } 
+                 function showHideAgentListRR(){
+                     if($("#agentTypeRR").val()=='ClosingSpecialist'){
+                         $("#ddlFilterRR2").hide();
+                         $("#ddlFilterRR1").show();
+                         initRR();
+                     }else if($("#agentTypeRR").val()=='ClosingCoordinator'){
+                         $("#ddlFilterRR1").hide();
+                         $("#ddlFilterRR2").show();
+                         initRR();
+                     }
+                 }
+                 function getDataRR(soql)
+                 {
+                    var results=[];
+                    sforce.connection.sessionId='{!$Api.Session_ID}';          
+                    result = sforce.connection.query(soql);
+                    var done=false;
+                    while(!done)
+                    {
+                        var records=result.getArray("records");
+                        console.log('Records: ' + records.length);
+                        for(var i=0;i < records.length;i++)
+                            results.push(records[i]);
+                        
+                        if(result.getBoolean("done"))
+                            done=true;
+                        else
+                            result=sforce.connection.queryMore(result.queryLocator);
+                    }    
+                    return results;
+                }
+                function initRR()
+                {   let soql ='';
+                    if($("#agentTypeRR").val()=='ClosingSpecialist'){
+                        soql= "Select Count(Id) total,Closing_Specialist__r.Name,Closing_Specialist__c from pba__Closing__c where ClosingCoordinatorProfile__c in ('MCRE Closing Coordinator')";
+                        if($("#ddlFilterRR1").val() != "All")
+                        {
+                            soql += " and Closing_Specialist__c = '"+$("#ddlFilterRR1").val()+"'";
+                        }
+                        soqlWhere = " and Closing_Status__c not in ('Closed','Bust Out','Pending Bust Out') and Home_Inspection_Date__c <= TODAY and RFR_Completed_Date__c = null and As_Is__c=false and Closing_Specialist__r.isActive=true";
+                        soql += soqlWhere;
+                        soql += " group by Closing_Specialist__r.Name,Closing_Specialist__c order by Count(Id) desc";
+                    }
+                    else if($("#agentTypeRR").val()=='ClosingCoordinator'){
+                        soql= "Select Count(Id) total,Closing_Coordinator__r.Name,Closing_Coordinator__c from pba__Closing__c where Closing_Coordinator__r.Profilename__c in ('Closing Scheduler Profile')";
+                        if($("#ddlFilterRR2").val() != "All")
+                        {
+                            soql += " and Closing_Coordinator__c = '"+$("#ddlFilterRR2").val()+"'";
+                        }
+                        soqlWhere = " and Closing_Status__c not in ('Closed','Bust Out','Pending Bust Out') and Home_Inspection_Date__c <= TODAY and RFR_Completed_Date__c = null and As_Is__c=false and Closing_Coordinator__r.isActive=true";
+                        soql += soqlWhere;
+                        soql += " group by Closing_Coordinator__r.Name,Closing_Coordinator__c order by Count(Id) desc";
+                    }
+                    var data = getDataRR(soql);
+                    table = $('#CR-Table-RR').DataTable( {
+                        "data": data,
+                        "columns": [
+                            {
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": ''
+                            },
+                            { "data": function(d) {
+                                return d.Name != null ? d.Name : '';
+                                }, "orderable": false  
+                            },
+                            { "data": function(d){
+                                var agentId = '';
+                                var agentName = '';
+                                let agentType = '';
+                                
+                                if($("#agentTypeRR").val()=='ClosingSpecialist'){
+                                    agentId = d.Closing_Specialist__c;
+                                    agentName = d.Name;
+                                    agentType = 'specialist';
+                                }else if($("#agentTypeRR").val()=='ClosingCoordinator'){
+                                    agentId = d.Closing_Coordinator__c;
+                                    agentName = d.Name;
+                                    agentType = 'coordinator';
+                                }
+                                var total = d.total;
+                                return `<a href="javascript:void(0);" onclick="openDialogRR('${agentId}','${agentName}','${agentType}')"> ${total}</a>`;
+                            }}
+                            
+                        ],
+                        searching: false,
+                        lengthChange: false,
+                        bInfo: false, 
+                        "order": [[2, 'desc']],
+                        destroy: true
+                    });
+                }
+                function openDialogRR(uid,uname,agentType)
+                {
+                    console.log('uid :::',uid);
+                    var myWindow = window.open("/apex/ClosingCoordinatorDialog?uid="+uid+"&uname="+uname+"&rtype=rfrl"+"&agentType="+agentType,"_blank");
+                    myWindow.focus();
+                }
+                
+            </script>
+        </apex:form>
+    </body>
+    </html>    
+</apex:page>
